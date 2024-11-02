@@ -4,8 +4,8 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const db = require('./config/db');
 const app = express();
-const router = express.Router();
 
+// Middleware for session
 app.use(session({
     secret: 'sajdsajdasdasdjjkgfggasd',
     resave: false,
@@ -13,32 +13,35 @@ app.use(session({
     cookie: { secure: false }
 }));
 
-// Middleware
+// Middleware for static files and form data parsing
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(session({
-    secret: 'your_secret_key',
-    resave: false,
-    saveUninitialized: true
-}));
 
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
 
+// Redirect root to login page
 app.get('/', (req, res) => {
-    res.redirect('/login'); // Redirect to the login page
+    res.redirect('/login');
 });
 
-// Routes
+// Home route with login check
 app.get('/home', (req, res) => {
     if (!req.session.user) {
-        return res.redirect('/login');
+        return res.redirect('/login'); // Redirect to login if not logged in
     }
-    res.render('home');
+    res.render('home'); // Render the homepage if logged in
 });
 
+// Shop route with login check
+app.get('/empshop', (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login'); // Redirect to login if not logged in
+    }
+    res.render('empshop'); // Render the empshop view if logged in
+});
 
-
+// Middleware to check if user is an admin
 function isAdmin(req, res, next) {
     if (req.session.loggedin && req.session.role === 'admin') {
         return next();
@@ -46,18 +49,21 @@ function isAdmin(req, res, next) {
     res.redirect('/login');
 }
 
+// Admin route with admin check
 app.get('/admin', isAdmin, (req, res) => {
     res.render('admin'); 
 });
 
+// Login page route
 app.get('/login', (req, res) => {
     res.render('login');
 });
 
+// Login form submission handling
 app.post('/login', async (req, res) => {
     const { id_no, password } = req.body;
 
-    if(id_no === 'admin' && password === 'admin') {
+    if (id_no === 'admin' && password === 'admin') {
         req.session.loggedin = true;
         req.session.role = 'admin';
         return res.redirect('/admin');
@@ -75,11 +81,12 @@ app.post('/login', async (req, res) => {
     res.redirect('/login'); // Invalid credentials
 });
 
-
+// Signup page route
 app.get('/signup', (req, res) => {
     res.render('signup');
 });
 
+// Signup form submission handling
 app.post('/signup', async (req, res) => {
     const { id_no, name, password, confirm_password } = req.body;
 
@@ -93,6 +100,7 @@ app.post('/signup', async (req, res) => {
     res.redirect('/login'); // Redirect to login after signup
 });
 
+// Logout route
 app.get('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {

@@ -34,6 +34,38 @@ app.get('/home', (req, res) => {
 });
 
 // Shop route with login check
+app.get('/tasks', (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login'); 
+    }
+    res.render('tasks'); 
+});
+
+// Shop route with login check
+app.get('/inout', (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login'); 
+    }
+    res.render('inout'); 
+});
+
+// Shop route with login check
+app.get('/services', (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login'); 
+    }
+    res.render('services'); 
+});
+
+// Shop route with login check
+app.get('/inventory', (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login'); 
+    }
+    res.render('inventory'); 
+});
+
+// Shop route with login check
 app.get('/empshop', (req, res) => {
     if (!req.session.user) {
         return res.redirect('/login'); // Redirect to login if not logged in

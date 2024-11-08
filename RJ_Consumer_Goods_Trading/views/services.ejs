@@ -6,12 +6,8 @@
     <title>Services</title>
     <style>
         /* Reset some default styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         /* Background and font settings */
         body, html {
             font-family: Arial, sans-serif;
@@ -21,9 +17,7 @@
         }
 
         /* Main container */
-        .container {
-            display: flex;
-        }
+        .container { display: flex; }
 
         /* Sidebar styling */
         .sidebar {
@@ -36,23 +30,11 @@
             align-items: center;
         }
 
-        .logo img {
-            width: 60px;
-            border-radius: 50%;
-        }
-
-        .logo h2 {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 1.1em;
-        }
+        .logo img { width: 60px; border-radius: 50%; }
+        .logo h2 { text-align: center; margin-top: 10px; font-size: 1.1em; }
 
         /* Sidebar menu items */
-        .sidebar nav {
-            margin-top: 30px;
-            width: 100%;
-        }
-
+        .sidebar nav { margin-top: 30px; width: 100%; }
         .menu-item {
             display: block;
             padding: 10px;
@@ -63,10 +45,7 @@
             text-align: center;
             border-radius: 5px;
         }
-
-        .menu-item.active {
-            background-color: #ff4a4a;
-        }
+        .menu-item.active { background-color: #ff4a4a; }
 
         /* Logout button styling */
         .logout {
@@ -110,9 +89,51 @@
             margin-top: 20px;
         }
 
-        .content h2 {
-            font-size: 1.5em;
-            color: #336666;
+        .content h2 { font-size: 1.5em; color: #336666; }
+
+        /* Tab buttons */
+        .tab-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .tab-button {
+            padding: 10px;
+            background-color: #8d4444;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .tab-button.active {
+            background-color: #ff4a4a;
+        }
+
+        /* Add button styling */
+        .add-button {
+            padding: 10px;
+            background-color: #ff4a4a;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* Tab content styling */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         /* Table styling */
@@ -128,13 +149,50 @@
             border: 1px solid #ccc;
         }
 
-        th {
-            background-color: #8c8c8c;
-            color: white;
+        th { background-color: #8c8c8c; color: white; }
+        td { background-color: #ddd; }
+
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
         }
 
-        td {
-            background-color: #ddd;
+        .modal-content {
+            background: white;
+            padding: 20px;
+            width: 400px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 15px;
+            color: #336666;
+        }
+
+        .modal-content input, .modal-content select {
+            width: 90%;
+            padding: 8px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .modal-content button {
+            padding: 10px;
+            background-color: #ff4a4a;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -168,14 +226,112 @@
 
             <section class="content">
                 <h2>Services</h2>
-                <table>
-                    <tr>
-                        <th>Branch</th>
-                        <th>Location</th>
-                    </tr>
-                </table>
+                
+                <!-- Tabs and Add Button -->
+                <div class="tab-container">
+                    <div class="tabs">
+                        <button class="tab-button active" onclick="showTab('returnsTab')">Return & Refunds</button>
+                        <button class="tab-button" onclick="showTab('discountsTab')">Discount & Promotion</button>
+                    </div>
+                    <button class="add-button" onclick="openModal()">+ Add</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div id="returnsTab" class="tab-content active">
+                    <table>
+                        <tr>
+                            <th>Customer Name</th>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Reason</th>
+                            <th>Price</th>
+                            <th>Action</th>
+                        </tr>
+                        <!-- Table rows go here -->
+                    </table>
+                </div>
+
+                <div id="discountsTab" class="tab-content">
+                    <table>
+                        <tr>
+                            <th>Customer Name</th>
+                            <th>Item</th>
+                            <th>Discount</th>
+                            <th>Action</th>
+                        </tr>
+                        <!-- Table rows go here -->
+                    </table>
+                </div>
             </section>
         </main>
     </div>
+
+    <!-- Modals for adding items -->
+    <div id="returnModal" class="modal">
+        <div class="modal-content">
+            <h3>Add Return & Refund</h3>
+            <input type="text" placeholder="Customer Name" id="returnCustomerName">
+            <input type="text" placeholder="Item" id="returnItem">
+            <input type="number" placeholder="Quantity" id="returnQuantity">
+            <input type="text" placeholder="Reason" id="returnReason">
+            <input type="number" placeholder="Price" id="returnPrice">
+            <button onclick="addReturn()">Submit</button>
+            <button onclick="closeModal()" class="back-button">Back</button>
+        </div>
+    </div>
+
+    <div id="discountModal" class="modal">
+        <div class="modal-content">
+            <h3>Add Discount & Promotion</h3>
+            <input type="text" placeholder="Customer Name" id="discountCustomerName">
+            <input type="text" placeholder="Item" id="discountItem">
+            <input type="number" placeholder="Discount (%)" id="discountValue">
+            <button onclick="addDiscount()">Submit</button>
+            <button onclick="closeModal()" class="back-button">Back</button>
+        </div>
+    </div>
+
+    <script>
+        let activeTab = 'returnsTab';
+
+        function showTab(tabId) {
+            activeTab = tabId;
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector([onclick="showTab('${tabId}')"]).classList.add('active');
+        }
+
+        function openModal() {
+            if (activeTab === 'returnsTab') {
+                document.getElementById('returnModal').style.display = 'flex';
+            } else if (activeTab === 'discountsTab') {
+                document.getElementById('discountModal').style.display = 'flex';
+            }
+        }
+
+        function closeModal() {
+            document.querySelectorAll('.modal').forEach(modal => modal.style.display = 'none');
+        }
+
+        function addReturn() {
+            // Capture input values and handle adding to the "Return & Refunds" table
+            closeModal();
+            alert('Return added successfully!');
+        }
+
+        function addDiscount() {
+            // Capture input values and handle adding to the "Discount & Promotion" table
+            closeModal();
+            alert('Discount added successfully!');
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                closeModal();
+            }
+        }
+    </script>
 </body>
 </html>

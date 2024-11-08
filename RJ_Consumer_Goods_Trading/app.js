@@ -28,12 +28,12 @@ app.get('/', (req, res) => {
 // Home route with login check
 app.get('/home', (req, res) => {
     if (!req.session.user) {
-        return res.redirect('/login'); // Redirect to login if not logged in
+        return res.redirect('/login'); 
     }
-    res.render('home'); // Render the homepage if logged in
+    res.render('home'); 
 });
 
-// Shop route with login check
+// Tasks route with login check
 app.get('/tasks', (req, res) => {
     if (!req.session.user) {
         return res.redirect('/login'); 
@@ -41,7 +41,7 @@ app.get('/tasks', (req, res) => {
     res.render('tasks'); 
 });
 
-// Shop route with login check
+// InOut route with login check
 app.get('/inout', (req, res) => {
     if (!req.session.user) {
         return res.redirect('/login'); 
@@ -49,15 +49,81 @@ app.get('/inout', (req, res) => {
     res.render('inout'); 
 });
 
-// Shop route with login check
-app.get('/services', (req, res) => {
+// Services route with login check and data retrieval
+app.get('/services', async (req, res) => {
     if (!req.session.user) {
         return res.redirect('/login'); 
     }
-    res.render('services'); 
+
+    try {
+        // Retrieve return_refunds data
+        const [returns] = await db.query('SELECT * FROM return_refunds');
+        // Retrieve discount promotions data
+        const [discounts] = await db.query('SELECT * FROM discount_promotions');
+
+        // Render services view with return_refunds and discount data
+        res.render('services', { returns, discounts });
+    } catch (err) {
+        console.error("Error fetching data:", err);
+        res.status(500).send("Server error");
+    }
 });
 
-// Shop route with login check
+// Route to handle delete requests for returns
+app.post('/services/delete/return/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await db.query('DELETE FROM return_refunds WHERE id = ?', [id]);
+        res.redirect('/services'); 
+    } catch (err) {
+        console.error("Error deleting return/refund:", err);
+        res.status(500).send("Server error");
+    }
+});
+
+// Route to handle delete requests for discounts
+app.post('/services/delete/discount/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await db.query('DELETE FROM discount_promotions WHERE id = ?', [id]);
+        res.redirect('/services'); 
+    } catch (err) {
+        console.error("Error deleting discount:", err);
+        res.status(500).send("Server error");
+    }
+});
+
+// Route to handle adding returns
+app.post('/services/add/return', async (req, res) => {
+    const { customer_name, item, quantity, reason, price } = req.body;
+
+    try {
+        await db.query('INSERT INTO return_refunds (customer_name, item, quantity, reason, price) VALUES (?, ?, ?, ?, ?)', 
+            [customer_name, item, quantity, reason, price]);
+        res.redirect('/services'); 
+    } catch (err) {
+        console.error("Error adding return:", err);
+        res.status(500).send("Server error");
+    }
+});
+
+// Route to handle adding discounts
+app.post('/services/add/discount', async (req, res) => {
+    const { customer_name, item, discount, price_after_discount } = req.body;
+
+    try {
+        await db.query('INSERT INTO discount_promotions (customer_name, item, discount, price_after_discount) VALUES (?, ?, ?, ?)', 
+            [customer_name, item, discount, price_after_discount]);
+        res.redirect('/services'); 
+    } catch (err) {
+        console.error("Error adding discount:", err);
+        res.status(500).send("Server error");
+    }
+});
+
+// Inventory route with login check
 app.get('/inventory', (req, res) => {
     if (!req.session.user) {
         return res.redirect('/login'); 
@@ -65,12 +131,12 @@ app.get('/inventory', (req, res) => {
     res.render('inventory'); 
 });
 
-// Shop route with login check
+// EmpShop route with login check
 app.get('/empshop', (req, res) => {
     if (!req.session.user) {
-        return res.redirect('/login'); // Redirect to login if not logged in
+        return res.redirect('/login');
     }
-    res.render('empshop'); // Render the empshop view if logged in
+    res.render('empshop');
 });
 
 // Middleware to check if user is an admin
@@ -106,11 +172,11 @@ app.post('/login', async (req, res) => {
         const user = rows[0];
         const match = await bcrypt.compare(password, user.password);
         if (match) {
-            req.session.user = user; // Store user info in session
+            req.session.user = user; 
             return res.redirect('/home');
         }
     }
-    res.redirect('/login'); // Invalid credentials
+    res.redirect('/login'); 
 });
 
 // Signup page route
@@ -123,13 +189,13 @@ app.post('/signup', async (req, res) => {
     const { id_no, name, password, confirm_password } = req.body;
 
     if (password !== confirm_password) {
-        return res.redirect('/signup'); // Passwords do not match
+        return res.redirect('/signup'); 
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     await db.query('INSERT INTO users (id_no, name, password) VALUES (?, ?, ?)', [id_no, name, hashedPassword]);
 
-    res.redirect('/login'); // Redirect to login after signup
+    res.redirect('/login'); 
 });
 
 // Logout route

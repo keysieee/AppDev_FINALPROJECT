@@ -198,6 +198,10 @@ app.post('/signup', async (req, res) => {
     res.redirect('/login'); 
 });
 
+// Importing and using task routes
+const taskRoutes = require('./routes/tasks'); // Import the task routes
+app.use('/', taskRoutes); // Use the routes
+
 // Logout route
 app.get('/logout', (req, res) => {
     req.session.destroy(err => {

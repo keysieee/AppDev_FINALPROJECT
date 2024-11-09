@@ -5,27 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory</title>
     <style>
-        /* Reset some default styles */
-        * {
+        body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Background and font settings */
-        body, html {
-            font-family: Arial, sans-serif;
-            height: 100%;
+            height: 100vh;
+            display: flex;
+            color: black;
             background: url('images/background.png') no-repeat center center fixed;
             background-size: cover;
-        }
-
-        /* Main container */
+        }        
+    
         .container {
             display: flex;
+            width: 100%;
+            height: 100%;
         }
-
-        /* Sidebar styling */
+    
         .sidebar {
             width: 250px;
             background-color: #3e3e3e;
@@ -35,24 +31,23 @@
             flex-direction: column;
             align-items: center;
         }
-
+    
         .logo img {
             width: 60px;
             border-radius: 50%;
         }
-
+    
         .logo h2 {
             text-align: center;
             margin-top: 10px;
             font-size: 1.1em;
         }
-
-        /* Sidebar menu items */
+    
         .sidebar nav {
             margin-top: 30px;
             width: 100%;
         }
-
+    
         .menu-item {
             display: block;
             padding: 10px;
@@ -63,12 +58,11 @@
             text-align: center;
             border-radius: 5px;
         }
-
+    
         .menu-item.active {
             background-color: #ff4a4a;
         }
-
-        /* Logout button styling */
+    
         .logout {
             margin-top: auto;
             padding: 10px;
@@ -79,64 +73,71 @@
             cursor: pointer;
             border-radius: 5px;
         }
-
-        /* Main content styling */
+    
         main {
             flex: 1;
             display: flex;
             flex-direction: column;
             padding: 20px;
         }
-
+    
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
+    
         .search {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-
+    
         .icons .icon {
             margin-left: 10px;
             cursor: pointer;
         }
-
-        /* Content area */
+    
+        footer {
+            width: 100%;
+            background: darkgray;
+            padding: 15px;
+            color: black;
+            display: flex;
+            justify-content: flex-start;
+            position: relative;
+        }
+    
         .content {
             margin-top: 20px;
         }
-
+    
         .content h2 {
             font-size: 1.5em;
             color: #336666;
         }
-
-        /* Table styling */
+    
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
         }
-
+    
         th, td {
             padding: 15px;
             text-align: left;
             border: 1px solid #ccc;
         }
-
+    
         th {
             background-color: #8c8c8c;
             color: white;
         }
-
+    
         td {
             background-color: #ddd;
         }
-    </style>
+    </style>    
 </head>
 <body>
     <div class="container">

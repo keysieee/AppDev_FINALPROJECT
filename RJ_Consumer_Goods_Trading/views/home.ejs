@@ -21,9 +21,9 @@
         }
         .sidebar {
             width: 15%; /* Sidebar takes 1/4 of the viewport */
-            background: darkgray; /* Dark gray background for sidebar */
+            background: #3e3e3e; /* Dark gray background for sidebar */
             padding: 20px;
-            color: white; /* Sidebar text color */
+            color: black; /* Sidebar text color */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow effect */
             display: flex;
             flex-direction: column; /* Stack items vertically */
@@ -59,7 +59,7 @@
         .store-name {
             font-size: 24px;
             font-weight: bold;
-            color: black; /* Store name color */
+            color: white; /* Store name color */
             display: flex; /* Use flexbox to align items */
             align-items: center; /* Center items vertically */
             white-space: nowrap; /* Prevent line breaks */
@@ -72,7 +72,6 @@
             flex-grow: 1; /* Allow content area to grow */
             padding: 20px;
             color: black; /* Content text color */
-            background: white; /* Plain white background for content */
             box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
             border-radius: 5px; /* Rounded corners */
             margin-top: 20px; /* Space between header and content */
@@ -117,11 +116,10 @@
                 R&J Consumer Goods Trading
             </div>
             <br>
-            <a href="#">Dashboard</a>
-            <a href="#">Tasks</a>
-            <a href="#">In/Out</a>
-            <a href="#">Services</a>
-            <a href="#">Inventory</a>
+            <a href="/tasks">Tasks</a>
+            <a href="/inout">In/Out</a>
+            <a href="/services">Services</a>
+            <a href="/inventory">Inventory</a>
             <a href="/empshop">Shop</a>
             <button class="logout-button" onclick="window.location.href='/logout'">Logout</button>
         </div>

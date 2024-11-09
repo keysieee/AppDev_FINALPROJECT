@@ -41,12 +41,38 @@ app.get('/tasks', (req, res) => {
     res.render('tasks'); 
 });
 
-// InOut route with login check
-app.get('/inout', (req, res) => {
+// InOut route with login check and data retrieval
+app.get('/inout', async (req, res) => {
     if (!req.session.user) {
         return res.redirect('/login'); 
     }
-    res.render('inout'); 
+
+    try {
+        // Fetch attendance records from the database
+        const [records] = await db.query('SELECT * FROM attendance');
+        
+        // Render the inout view with attendance data
+        res.render('inout', { records });
+    } catch (err) {
+        console.error("Error fetching attendance records:", err);
+        res.status(500).send("Server error");
+    }
+});
+
+// Route to handle adding attendance records
+app.post('/inout/add', async (req, res) => {
+    const { employee_id, branch, location, in_time, out_time, date } = req.body;
+
+    try {
+        await db.query(
+            'INSERT INTO attendance (employee_id, branch, location, in_time, out_time, date) VALUES (?, ?, ?, ?, ?, ?)',
+            [employee_id, branch, location, in_time, out_time, date]
+        );
+        res.redirect('/inout'); // Redirect to the inout page after adding
+    } catch (err) {
+        console.error("Error adding attendance record:", err);
+        res.status(500).send("Server error");
+    }
 });
 
 // Services route with login check and data retrieval

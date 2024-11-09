@@ -151,7 +151,129 @@
         td {
             background-color: #ddd;
         }
-    </style>    
+        /* Modal Style */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.4); 
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Right-side Create Button */
+        .create-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .create-btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Input fields styling */
+        input[type="text"],
+        input[type="date"],
+        input[type="time"],
+        select {
+            width: 100%;
+            padding: 8px 15px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: #f9f9f9;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        input[type="time"]:focus,
+        select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        label {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        /* Button inside the modal */
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        /* List-style for input fields */
+        .form-container {
+            list-style: none;
+            padding: 0;
+        }
+
+        .form-container li {
+            margin-bottom: 15px;
+        }
+
+        .form-container li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Adjust search input size */
+        .search {
+            padding: 8px 15px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: px;
+        }
+
+    </style>
 </head>
 <body>
     <div class="container">
@@ -174,23 +296,119 @@
         <!-- Main Content -->
         <main>
             <header class="header">
-                <input type="text" placeholder="Type here..." class="search">
+                <input type="text" placeholder="Search..." class="search">
                 <div class="icons">
                     <a href="/home" class="icon">🏠</a>
                     <span class="icon">👤</span>
                 </div>
             </header>
 
+            <!-- Button to trigger modal -->
+            <button class="create-btn" id="createRecordBtn">Create Record</button>
+
+            <!-- Modal with input form -->
+            <div id="attendanceModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" id="closeModalBtn">&times;</span>
+                    <h2>Add Attendance Record</h2>
+                    <form action="/inout/add" method="POST">
+                        <ul class="form-container">
+                            <li>
+                                <label for="employee_id">Employee ID:</label>
+                                <input type="text" id="employee_id" name="employee_id" required>
+                            </li>
+                            <li>
+                                <label for="branch">Branch:</label>
+                                <input type="text" id="branch" name="branch" required>
+                            </li>
+                            <li>
+                                <label for="location">Location:</label>
+                                <input type="text" id="location" name="location" required>
+                            </li>
+                            <li>
+                                <label for="in_time">In Time:</label>
+                                <input type="time" id="in_time" name="in_time" required>
+                            </li>
+                            <li>
+                                <label for="out_time">Out Time:</label>
+                                <input type="time" id="out_time" name="out_time">
+                            </li>
+                            <li>
+                                <label for="date">Date:</label>
+                                <input type="date" id="date" name="date" required>
+                            </li>
+                            <li>
+                                <button type="submit">Add Record</button>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+            </div>
+
             <section class="content">
-                <h2>Attendance</h2>
+                <!-- Existing Table of Attendance Records -->
                 <table>
-                    <tr>
-                        <th>Branch</th>
-                        <th>Location</th>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>Employee ID</th>
+                            <th>Branch</th>
+                            <th>Location</th>
+                            <th>In Time</th>
+                            <th>Out Time</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% records.forEach(record => { %>
+                            <tr>
+                                <td><%= record.employee_id %></td>
+                                <td><%= record.branch %></td>
+                                <td><%= record.location %></td>
+                                <td><%= record.in_time %></td>
+                                <td><%= record.out_time %></td>
+                                <td><%= record.date %></td>
+                                <td>
+                                    <form action="/inout/update/<%= record.id %>" method="POST" style="display:inline;">
+                                        <input type="hidden" name="employee_id" value="<%= record.employee_id %>">
+                                        <input type="time" name="in_time" value="<%= record.in_time %>" required>
+                                        <input type="time" name="out_time" value="<%= record.out_time %>">
+                                        <button type="submit">Update</button>
+                                    </form>
+                                    <form action="/inout/delete/<%= record.id %>" method="POST" style="display:inline;">
+                                        <button type="submit">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
                 </table>
             </section>
         </main>
     </div>
+
+    <script>
+        // Get modal and button elements
+        const modal = document.getElementById("attendanceModal");
+        const btn = document.getElementById("createRecordBtn");
+        const closeModalBtn = document.getElementById("closeModalBtn");
+
+        // When the user clicks the button, open the modal
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on the close button, close the modal
+        closeModalBtn.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>

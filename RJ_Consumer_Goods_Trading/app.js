@@ -3,6 +3,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const db = require('./config/db');
+const servicesRoutes = require('./routes/services');  // Importing services routes
 const app = express();
 
 // Middleware for session
@@ -47,80 +48,6 @@ app.get('/inout', (req, res) => {
         return res.redirect('/login'); 
     }
     res.render('inout'); 
-});
-
-// Services route with login check and data retrieval
-app.get('/services', async (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/login'); 
-    }
-
-    try {
-        // Retrieve return_refunds data
-        const [returns] = await db.query('SELECT * FROM return_refunds');
-        // Retrieve discount promotions data
-        const [discounts] = await db.query('SELECT * FROM discount_promotions');
-
-        // Render services view with return_refunds and discount data
-        res.render('services', { returns, discounts });
-    } catch (err) {
-        console.error("Error fetching data:", err);
-        res.status(500).send("Server error");
-    }
-});
-
-// Route to handle delete requests for returns
-app.post('/services/delete/return/:id', async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        await db.query('DELETE FROM return_refunds WHERE id = ?', [id]);
-        res.redirect('/services'); 
-    } catch (err) {
-        console.error("Error deleting return/refund:", err);
-        res.status(500).send("Server error");
-    }
-});
-
-// Route to handle delete requests for discounts
-app.post('/services/delete/discount/:id', async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        await db.query('DELETE FROM discount_promotions WHERE id = ?', [id]);
-        res.redirect('/services'); 
-    } catch (err) {
-        console.error("Error deleting discount:", err);
-        res.status(500).send("Server error");
-    }
-});
-
-// Route to handle adding returns
-app.post('/services/add/return', async (req, res) => {
-    const { customer_name, item, quantity, reason, price } = req.body;
-
-    try {
-        await db.query('INSERT INTO return_refunds (customer_name, item, quantity, reason, price) VALUES (?, ?, ?, ?, ?)', 
-            [customer_name, item, quantity, reason, price]);
-        res.redirect('/services'); 
-    } catch (err) {
-        console.error("Error adding return:", err);
-        res.status(500).send("Server error");
-    }
-});
-
-// Route to handle adding discounts
-app.post('/services/add/discount', async (req, res) => {
-    const { customer_name, item, discount, price_after_discount } = req.body;
-
-    try {
-        await db.query('INSERT INTO discount_promotions (customer_name, item, discount, price_after_discount) VALUES (?, ?, ?, ?)', 
-            [customer_name, item, discount, price_after_discount]);
-        res.redirect('/services'); 
-    } catch (err) {
-        console.error("Error adding discount:", err);
-        res.status(500).send("Server error");
-    }
 });
 
 // Inventory route with login check
@@ -198,7 +125,16 @@ app.post('/signup', async (req, res) => {
     res.redirect('/login'); 
 });
 
-// Importing and using task routes
+// Logout route
+app.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.redirect('/home');
+        }
+        res.redirect('/login');
+    });
+});
+
 const taskRoutes = require('./routes/tasks'); // Import the task routes
 app.use('/', taskRoutes); // Use the routes
 
@@ -211,6 +147,65 @@ app.get('/logout', (req, res) => {
         res.redirect('/login');
     });
 });
+
+// Services route with login check and data retrieval
+app.get('/services', async (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login'); 
+    }
+
+    try {
+        // Retrieve return_refunds data
+        const [returns] = await db.query('SELECT * FROM return_refunds');
+        // Retrieve discount promotions data
+        const [discounts] = await db.query('SELECT * FROM discount_promotions');
+
+        // Render services view with return_refunds and discount data
+        res.render('services', { returns, discounts });
+    } catch (err) {
+        console.error("Error fetching data:", err);
+        res.status(500).send("Server error");
+    }
+});
+
+// Add a return
+app.post('/services/add/return', async (req, res) => {
+    const { customer_name, item, quantity, reason, price } = req.body;
+
+    try {
+        await db.query('INSERT INTO return_refunds (customer_name, item, quantity, reason, price) VALUES (?, ?, ?, ?, ?)', 
+            [customer_name, item, quantity, reason, price]);
+        res.redirect('/services'); // After insertion, redirect back to /services
+    } catch (err) {
+        console.error("Error adding return:", err);
+        res.status(500).send("Server error");
+    }
+});
+
+// Add a discount (calculate price after discount)
+app.post('/services/add/discount', async (req, res) => {
+    const { customer_name, item, discount, price } = req.body;
+
+    // Validate the inputs to ensure they are correct and numbers
+    if (isNaN(discount) || isNaN(price) || discount < 0 || discount > 100 || price < 0) {
+        return res.status(400).send("Invalid input data");
+    }
+
+    // Calculate price after discount
+    const price_after_discount = price - (price * (discount / 100));
+
+    try {
+        await db.query('INSERT INTO discount_promotions (customer_name, item, discount, price_after_discount) VALUES (?, ?, ?, ?)', 
+            [customer_name, item, discount, price_after_discount]);
+        res.redirect('/services'); // After insertion, redirect back to /services
+    } catch (err) {
+        console.error("Error adding discount:", err);
+        res.status(500).send("Server error");
+    }
+});
+
+// Use the services routes (this will catch all /services* routes)
+app.use('/services', servicesRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 3000;

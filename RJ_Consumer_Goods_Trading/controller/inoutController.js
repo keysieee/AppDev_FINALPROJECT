@@ -27,6 +27,7 @@ exports.updateAttendance = async (req, res) => {
     }
 };
 
+
 // Delete attendance record
 exports.deleteAttendance = async (req, res) => {
     const { id } = req.params;

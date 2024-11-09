@@ -1,65 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const servicesController = require('../controllers/servicesController'); // Adjust path as necessary
+const servicesController = require('../controller/servicesController');
 
-// Services page, loading both returns and discounts
-router.get('/', async (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/login');
-    }
+// Routes for Return & Refunds
+router.get('/returns', servicesController.getReturns); // Fetch all return & refund records
+router.post('/returns', servicesController.addReturn); // Add a new return & refund
+router.put('/returns/:id', servicesController.updateReturn); // Update a specific return & refund
+router.delete('/returns/:id', servicesController.deleteReturn); // Delete a specific return & refund
 
-    try {
-        const returns = await servicesController.getReturns();
-        const discounts = await servicesController.getDiscounts();
-        res.render('services', { returns, discounts });
-    } catch (error) {
-        console.error("Error loading services page:", error);
-        res.status(500).send("Server error");
-    }
-});
-
-// Add a new return/refund
-router.post('/add/return', async (req, res) => {
-    try {
-        await servicesController.addReturn(req.body);
-        res.redirect('/services');
-    } catch (error) {
-        console.error("Error adding return/refund:", error);
-        res.status(500).send("Server error");
-    }
-});
-
-// Add a new discount promotion
-router.post('/add/discount', async (req, res) => {
-    try {
-        await servicesController.addDiscount(req.body);
-        res.redirect('/services');
-    } catch (error) {
-        console.error("Error adding discount promotion:", error);
-        res.status(500).send("Server error");
-    }
-});
-
-// Delete a return/refund
-router.post('/delete/return/:id', async (req, res) => {
-    try {
-        await servicesController.deleteReturn(req.params.id);
-        res.redirect('/services');
-    } catch (error) {
-        console.error("Error deleting return/refund:", error);
-        res.status(500).send("Server error");
-    }
-});
-
-// Delete a discount promotion
-router.post('/delete/discount/:id', async (req, res) => {
-    try {
-        await servicesController.deleteDiscount(req.params.id);
-        res.redirect('/services');
-    } catch (error) {
-        console.error("Error deleting discount promotion:", error);
-        res.status(500).send("Server error");
-    }
-});
+// Routes for Discount & Promotions
+router.get('/discounts', servicesController.getDiscounts); // Fetch all discount & promotion records
+router.post('/discounts', servicesController.addDiscount); // Add a new discount & promotion
+router.put('/discounts/:id', servicesController.updateDiscount); // Update a specific discount & promotion
+router.delete('/discounts/:id', servicesController.deleteDiscount); // Delete a specific discount & promotion
 
 module.exports = router;

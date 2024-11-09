@@ -214,122 +214,217 @@
             <button class="logout" onclick="window.location.href='/logout'">Logout</button>
         </aside>
 
-        <!-- Main Content -->
-        <main>
-            <header class="header">
-                <input type="text" placeholder="Type here..." class="search">
-                <div class="icons">
-                    <a href="/home" class="icon">🏠</a>
-                    <span class="icon">👤</span>
-                </div>
-            </header>
+<main>
+    <header class="header">
+        <input type="text" placeholder="Search" class="search">
+        <div class="icons">
+            <a href="/home" class="icon">🏠</a>
+            <span class="icon">👤</span>
+        </div>
+    </header>
 
-            <section class="content">
-                <h2>Services</h2>
-                
-                <!-- Tabs and Add Button -->
-                <div class="tab-container">
-                    <div class="tabs">
-                        <button class="tab-button active" onclick="showTab('returnsTab')">Return & Refunds</button>
-                        <button class="tab-button" onclick="showTab('discountsTab')">Discount & Promotion</button>
-                    </div>
-                    <button class="add-button" onclick="openModal()">+ Add</button>
-                </div>
+    <section class="content">
+        <h2>Services</h2>
+        
+        <!-- Tabs -->
+        <div class="tab-container">
+            <div class="tabs">
+                <button class="tab-button active" onclick="showTab('returnsTab')">Return & Refunds</button>
+                <button class="tab-button" onclick="showTab('discountsTab')">Discount & Promotion</button>
+            </div>
+        </div>
 
-                <!-- Tab Content -->
-                <div id="returnsTab" class="tab-content active">
-                    <table>
-                        <tr>
-                            <th>Customer Name</th>
-                            <th>Item</th>
-                            <th>Quantity</th>
-                            <th>Reason</th>
-                            <th>Price</th>
-                            <th>Action</th>
-                        </tr>
-                        <!-- Table rows go here -->
-                    </table>
-                </div>
+        <!-- Tab Content for Returns & Refunds -->
+        <div id="returnsTab" class="tab-content active">
+            <button class="add-button" onclick="openReturnModal()">+ Add Return/Refund</button>
+            <table>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Reason</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+                <% returns.forEach(function(returnService) { %>
+                    <tr>
+                        <td><%= returnService.customer_name %></td>
+                        <td><%= returnService.item %></td>
+                        <td><%= returnService.quantity %></td>
+                        <td><%= returnService.reason %></td>
+                        <td><%= returnService.price %></td>
+                        <td>
+                            <button onclick="openUpdateReturnModal('<%= returnService.id %>')">Update</button>
+                            <form action="/services/delete/return/<%= returnService.id %>" method="POST" style="display:inline;">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </table>
+        </div>
 
-                <div id="discountsTab" class="tab-content">
-                    <table>
-                        <tr>
-                            <th>Customer Name</th>
-                            <th>Item</th>
-                            <th>Discount</th>
-                            <th>Action</th>
-                        </tr>
-                        <!-- Table rows go here -->
-                    </table>
-                </div>
-            </section>
-        </main>
+        <!-- Tab Content for Discounts & Promotions -->
+        <div id="discountsTab" class="tab-content">
+            <button class="add-button" onclick="openDiscountModal()">+ Add Discount/Promo</button>
+            <table>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Discount (%)</th>
+                    <th>Price after Discount</th>
+                    <th>Action</th>
+                </tr>
+                <% discounts.forEach(function(discountService) { %>
+                    <tr>
+                        <td><%= discountService.customer_name %></td>
+                        <td><%= discountService.item %></td>
+                        <td><%= discountService.price %></td>
+                        <td><%= discountService.discount %></td>
+                        <td><%= discountService.price_after_discount %></td>
+                        <td>
+                            <button onclick="openUpdateDiscountModal('<%= discountService.id %>')">Update</button>
+                            <form action="/services/delete/discount/<%= discountService.id %>" method="POST" style="display:inline;">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </table>
+        </div>
+    </section>
+</main>
+
+<!-- Modal for Add Return/Refund -->
+<div id="returnModal" class="modal">
+    <div class="modal-content">
+        <h3>Add Return & Refund</h3>
+        <form action="/services/add/return" method="POST">
+            <input type="text" name="customer_name" placeholder="Customer Name" required>
+            <input type="text" name="item" placeholder="Item" required>
+            <input type="number" name="quantity" placeholder="Quantity" required>
+            <input type="text" name="reason" placeholder="Reason" required>
+            <input type="number" step="0.01" name="price" placeholder="Price" required>
+            <button type="submit">Submit</button>
+            <button type="button" onclick="closeModal()" class="back-button">Back</button>
+        </form>
     </div>
+</div>
 
-    <!-- Modals for adding items -->
-    <div id="returnModal" class="modal">
+
+<!-- Modal for Add Discount/Promo -->
+<div id="discountModal" class="modal">
+    <div class="modal-content">
+        <h3>Add Discount & Promotion</h3>
+        <form action="/services/add/discount" method="POST">
+            <input type="text" name="customer_name" placeholder="Customer Name" required>
+            <input type="text" name="item" placeholder="Item" required>
+            
+            <!-- Price Input -->
+            <input type="number" name="price" id="price" placeholder="Price" step="0.01" required>
+
+            <!-- Discount Input -->
+            <input type="number" name="discount" id="discount" placeholder="Discount (%)" step="0.01" required>
+
+            <!-- Calculated Price After Discount -->
+            <input 
+                type="number" 
+                name="price_after_discount" 
+                id="price_after_discount" 
+                placeholder="Price After Discount" 
+                step="0.01" 
+                readonly 
+            >
+
+            <button type="submit">Submit</button>
+            <button type="button" onclick="closeModal()" class="back-button">Back</button>
+        </form>
+    </div>
+</div>
+
+
+    <!-- Modal for Update Return/Refund -->
+    <div id="updateReturnModal" class="modal">
         <div class="modal-content">
-            <h3>Add Return & Refund</h3>
-            <input type="text" placeholder="Customer Name" id="returnCustomerName">
-            <input type="text" placeholder="Item" id="returnItem">
-            <input type="number" placeholder="Quantity" id="returnQuantity">
-            <input type="text" placeholder="Reason" id="returnReason">
-            <input type="number" placeholder="Price" id="returnPrice">
-            <button onclick="addReturn()">Submit</button>
-            <button onclick="closeModal()" class="back-button">Back</button>
+            <h3>Update Return & Refund</h3>
+            <form action="/services/update/return" method="POST">
+                <input type="text" name="customer_name" id="updateReturnCustomerName" required>
+                <input type="text" name="item" id="updateReturnItem" required>
+                <input type="number" name="quantity" id="updateReturnQuantity" required>
+                <input type="text" name="reason" id="updateReturnReason" required>
+                <input type="number" step="0.01" name="price" id="updateReturnPrice" required>
+                <button type="submit">Update</button>
+                <button type="button" onclick="closeModal()" class="back-button">Back</button>
+            </form>
         </div>
     </div>
 
-    <div id="discountModal" class="modal">
+    <!-- Modal for Update Discount/Promo -->
+    <div id="updateDiscountModal" class="modal">
         <div class="modal-content">
-            <h3>Add Discount & Promotion</h3>
-            <input type="text" placeholder="Customer Name" id="discountCustomerName">
-            <input type="text" placeholder="Item" id="discountItem">
-            <input type="number" placeholder="Discount (%)" id="discountValue">
-            <button onclick="addDiscount()">Submit</button>
-            <button onclick="closeModal()" class="back-button">Back</button>
+            <h3>Update Discount & Promotion</h3>
+            <form action="/services/update/discount" method="POST">
+                <input type="text" name="customer_name" id="updateDiscountCustomerName" required>
+                <input type="text" name="item" id="updateDiscountItem" required>
+                <input type="number" name="price" id="updateDiscountItem" required>
+                <input type="number" name="discount" id="updateDiscountValue" required>
+                <button type="submit">Update</button>
+                <button type="button" onclick="closeModal()" class="back-button">Back</button>
+            </form>
         </div>
     </div>
 
     <script>
-        let activeTab = 'returnsTab';
+        // JavaScript functions for opening modals, adding, updating, and deleting
 
-        function showTab(tabId) {
-            activeTab = tabId;
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            document.querySelector([onclick="showTab('${tabId}')"]).classList.add('active');
+        // Open Add Return Modal
+        function openReturnModal() {
+            document.getElementById('returnModal').style.display = 'flex';
         }
 
-        function openModal() {
-            if (activeTab === 'returnsTab') {
-                document.getElementById('returnModal').style.display = 'flex';
-            } else if (activeTab === 'discountsTab') {
-                document.getElementById('discountModal').style.display = 'flex';
-            }
+        // Open Add Discount Modal
+        function openDiscountModal() {
+            document.getElementById('discountModal').style.display = 'flex';
         }
 
+        // Close all modals
         function closeModal() {
             document.querySelectorAll('.modal').forEach(modal => modal.style.display = 'none');
         }
 
-        function addReturn() {
-            // Capture input values and handle adding to the "Return & Refunds" table
-            closeModal();
-            alert('Return added successfully!');
-        }
+        // Show and hide tabs
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
 
-        function addDiscount() {
-            // Capture input values and handle adding to the "Discount & Promotion" table
-            closeModal();
-            alert('Discount added successfully!');
-        }
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => button.classList.remove('active'));
 
-        // Close modals when clicking outside
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                closeModal();
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => button.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+        document.getElementById('price').addEventListener('input', calculatePriceAfterDiscount);
+        document.getElementById('discount').addEventListener('input', calculatePriceAfterDiscount);
+
+        function calculatePriceAfterDiscount() {
+            const price = parseFloat(document.getElementById('price').value);
+            const discount = parseFloat(document.getElementById('discount').value);
+            const priceAfterDiscountField = document.getElementById('price_after_discount');
+
+            if (!isNaN(price) && !isNaN(discount)) {
+                const priceAfterDiscount = price - (price * (discount / 100));
+                priceAfterDiscountField.value = priceAfterDiscount.toFixed(2);
+            } else {
+                priceAfterDiscountField.value = '';
             }
         }
     </script>

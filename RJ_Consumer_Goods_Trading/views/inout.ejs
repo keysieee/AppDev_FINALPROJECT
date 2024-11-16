@@ -325,16 +325,12 @@
                                 <input type="text" id="location" name="location" required>
                             </li>
                             <li>
-                                <label for="in_time">In Time:</label>
-                                <input type="time" id="in_time" name="in_time" required>
-                            </li>
-                            <li>
-                                <label for="out_time">Out Time:</label>
-                                <input type="time" id="out_time" name="out_time">
+                                <label for="time_in">Time In:</label>
+                                <input type="time" id="time_in" name="time_in" required readonly>
                             </li>
                             <li>
                                 <label for="date">Date:</label>
-                                <input type="date" id="date" name="date" required>
+                                <input type="date" id="date" name="date" required readonly>
                             </li>
                             <li>
                                 <button type="submit">Add Record</button>
@@ -352,8 +348,8 @@
                             <th>Employee ID</th>
                             <th>Branch</th>
                             <th>Location</th>
-                            <th>In Time</th>
-                            <th>Out Time</th>
+                            <th>Time In</th>
+                            <th>Time Out</th>
                             <th>Date</th>
                             <th>Actions</th>
                         </tr>
@@ -364,19 +360,14 @@
                                 <td><%= record.employee_id %></td>
                                 <td><%= record.branch %></td>
                                 <td><%= record.location %></td>
-                                <td><%= record.in_time %></td>
-                                <td><%= record.out_time %></td>
+                                <td><%= record.time_in %></td>
+                                <td><%= record.time_out %></td>
                                 <td><%= record.date %></td>
                                 <td>
                                     <form action="/inout/update/<%= record.id %>" method="POST" style="display:inline;">
-                                        <input type="hidden" name="employee_id" value="<%= record.employee_id %>">
-                                        <input type="time" name="in_time" value="<%= record.in_time %>" required>
-                                        <input type="time" name="out_time" value="<%= record.out_time %>">
+                                        <input type="hidden" name="_method" value="PATCH">
                                         <button type="submit">Update</button>
-                                    </form>
-                                    <form action="/inout/delete/<%= record.id %>" method="POST" style="display:inline;">
-                                        <button type="submit">Delete</button>
-                                    </form>
+                                    </form>                                                                        
                                 </td>
                             </tr>
                         <% }) %>
@@ -385,29 +376,61 @@
             </section>
         </main>
     </div>
-
     <script>
+        function setCurrentDateTime() {
+            // Get the current local date and time
+            const currentDate = new Date();
+    
+            // Get the hours and minutes
+            let hours = currentDate.getHours();
+            let minutes = currentDate.getMinutes();
+    
+            // Pad the minutes with leading zero if needed
+            if (minutes < 10) minutes = '0' + minutes;
+    
+            // Format the time as HH:mm
+            let currentTime = `${hours}:${minutes}`;
+    
+            // Format the date to YYYY-MM-DD for the input type="date"
+            const currentDateString = currentDate.toLocaleDateString('en-CA'); // Using 'en-CA' for YYYY-MM-DD format
+    
+            // Set the current time and date in the respective fields
+            document.getElementById('in_time').value = currentTime;
+            document.getElementById('date').value = currentDateString;
+        }
+    
         // Get modal and button elements
         const modal = document.getElementById("attendanceModal");
         const btn = document.getElementById("createRecordBtn");
         const closeModalBtn = document.getElementById("closeModalBtn");
-
+    
         // When the user clicks the button, open the modal
         btn.onclick = function() {
+            // Get current date and time
+            const currentDate = new Date();
+            const hours = currentDate.getHours();
+            const minutes = currentDate.getMinutes();
+            const currentTime = `${hours}:${minutes < 10 ? '0' + minutes : minutes}`; // HH:mm format
+            const currentDateString = currentDate.toLocaleDateString('en-CA'); // YYYY-MM-DD format
+    
+            // Set the default values for the input fields
+            document.getElementById('in_time').value = currentTime;
+            document.getElementById('date').value = currentDateString;
+    
             modal.style.display = "block";
         }
-
+    
         // When the user clicks on the close button, close the modal
         closeModalBtn.onclick = function() {
             modal.style.display = "none";
         }
-
+    
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
             }
         }
-    </script>
+    </script>    
 </body>
 </html>

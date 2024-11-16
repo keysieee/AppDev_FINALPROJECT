@@ -14,6 +14,18 @@ app.use(session({
     cookie: { secure: false }
 }));
 
+const methodOverride = require('method-override');
+app.use(methodOverride('_method'));
+
+// Route for updating
+app.put('/inout/update/:id', (req, res) => {
+    const id = req.params.id;
+    // Example logic to handle the update
+    // You might want to interact with a database here
+    console.log(`Updating In/Out status for ID: ${id}`);
+    res.send(`Updated In/Out status for ID: ${id}`);
+});
+
 // Middleware for static files and form data parsing
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));

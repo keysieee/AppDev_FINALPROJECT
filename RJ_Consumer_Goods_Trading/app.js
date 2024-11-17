@@ -5,6 +5,10 @@ const bcrypt = require('bcryptjs');
 const db = require('./config/db');
 const servicesRoutes = require('./routes/services');  // Importing services routes
 const app = express();
+const path = require('path');
+const tasksRoutes = require('./routes/tasks');
+
+app.use('/tasks', tasksRoutes);
 
 // Middleware for session
 app.use(session({
@@ -46,13 +50,10 @@ app.get('/home', (req, res) => {
     res.render('home'); 
 });
 
-// Tasks route with login check
-app.get('/tasks', (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/login'); 
-    }
-    res.render('tasks'); 
-});
+// Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'ejs');
 
 // InOut route with login check and data retrieval
 app.get('/inout', async (req, res) => {
@@ -74,12 +75,12 @@ app.get('/inout', async (req, res) => {
 
 // Route to handle adding attendance records
 app.post('/inout/add', async (req, res) => {
-    const { employee_id, branch, location, in_time, out_time, date } = req.body;
+    const { employee_id, branch, location, time_in, time_out, date } = req.body;
 
     try {
         await db.query(
-            'INSERT INTO attendance (employee_id, branch, location, in_time, out_time, date) VALUES (?, ?, ?, ?, ?, ?)',
-            [employee_id, branch, location, in_time, out_time, date]
+            'INSERT INTO attendance (employee_id, branch, location, time_in, time_out, date) VALUES (?, ?, ?, ?, ?, ?)',
+            [employee_id, branch, location, time_in, time_out, date]
         );
         res.redirect('/inout'); // Redirect to the inout page after adding
     } catch (err) {
@@ -172,9 +173,6 @@ app.get('/logout', (req, res) => {
         res.redirect('/login');
     });
 });
-
-const taskRoutes = require('./routes/tasks'); // Import the task routes
-app.use('/', taskRoutes); // Use the routes
 
 // Logout route
 app.get('/logout', (req, res) => {

@@ -1,9 +1,10 @@
-// routes/tasks.js
 const express = require('express');
 const router = express.Router();
-const taskController = require('../controller/taskController'); // Import the task controller
+const taskController = require('../controller/taskController');
 
-// Route to display tasks page
-router.get('/tasks', taskController.getTasks); // Use the controller method to render the tasks view
+router.get('/', taskController.getTasks);
+router.post('/add', taskController.addTask);
+router.post('/toggle/:id', taskController.toggleTask);
+router.post('/delete/:id', taskController.deleteTask);
 
 module.exports = router;

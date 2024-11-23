@@ -224,7 +224,6 @@
     </header>
 
     <section class="content">
-        <h2>Services</h2>
         
         <!-- Tabs -->
         <div class="tab-container">
@@ -254,8 +253,11 @@
                         <td><%= returnService.reason %></td>
                         <td><%= returnService.price %></td>
                         <td>
-                            <button onclick="openUpdateReturnModal('<%= returnService.id %>')">Update</button>
-                            <form action="/services/delete/return/<%= returnService.id %>" method="POST" style="display:inline;">
+                            <button onclick="openEditModal(this)" 
+                            data-service='<%- JSON.stringify(returnService) %>' 
+                            data-type="returns">Edit</button>
+
+                            <form action="/services/delete/return/<%= returnService.id %>" method="POST">
                                 <button type="submit">Delete</button>
                             </form>
                         </td>
@@ -284,8 +286,11 @@
                         <td><%= discountService.discount %></td>
                         <td><%= discountService.price_after_discount %></td>
                         <td>
-                            <button onclick="openUpdateDiscountModal('<%= discountService.id %>')">Update</button>
-                            <form action="/services/delete/discount/<%= discountService.id %>" method="POST" style="display:inline;">
+                            <button onclick="openEditModal(this)" 
+                            data-service='<%- JSON.stringify(discountService) %>' 
+                            data-type="discounts">Edit</button>
+
+                            <form action="/services/delete/discount/<%= discountService.id %>" method="POST">
                                 <button type="submit">Delete</button>
                             </form>
                         </td>
@@ -319,6 +324,7 @@
         <h3>Add Discount & Promotion</h3>
         <form action="/services/add/discount" method="POST">
             <input type="text" name="customer_name" placeholder="Customer Name" required>
+
             <input type="text" name="item" placeholder="Item" required>
             
             <!-- Price Input -->
@@ -343,37 +349,42 @@
     </div>
 </div>
 
-
-    <!-- Modal for Update Return/Refund -->
-    <div id="updateReturnModal" class="modal">
-        <div class="modal-content">
-            <h3>Update Return & Refund</h3>
-            <form action="/services/update/return" method="POST">
-                <input type="text" name="customer_name" id="updateReturnCustomerName" required>
-                <input type="text" name="item" id="updateReturnItem" required>
-                <input type="number" name="quantity" id="updateReturnQuantity" required>
-                <input type="text" name="reason" id="updateReturnReason" required>
-                <input type="number" step="0.01" name="price" id="updateReturnPrice" required>
-                <button type="submit">Update</button>
-                <button type="button" onclick="closeModal()" class="back-button">Back</button>
-            </form>
-        </div>
+ <!-- Modal for Update Return/Refund -->
+<!-- Modal for Update Return/Refund -->
+<div id="editReturnModal" class="modal">
+    <div class="modal-content">
+        <h3>Edit Return & Refund</h3>
+        <form id="editReturnForm">
+            <input type="hidden" id="editReturnId">
+            <input type="text" id="editReturnCustomerName" placeholder="Customer Name" required>
+            <input type="text" id="editReturnItem" placeholder="Item" required>
+            <input type="number" id="editReturnQuantity" placeholder="Quantity" required>
+            <input type="text" id="editReturnReason" placeholder="Reason">
+            <input type="number" step="0.01" id="editReturnPrice" placeholder="Price" required>
+            <button type="button" onclick="updateReturn()">Update</button>
+            <button type="button" onclick="closeModal()">Cancel</button>
+        </form>
     </div>
+</div>
 
-    <!-- Modal for Update Discount/Promo -->
-    <div id="updateDiscountModal" class="modal">
-        <div class="modal-content">
-            <h3>Update Discount & Promotion</h3>
-            <form action="/services/update/discount" method="POST">
-                <input type="text" name="customer_name" id="updateDiscountCustomerName" required>
-                <input type="text" name="item" id="updateDiscountItem" required>
-                <input type="number" name="price" id="updateDiscountItem" required>
-                <input type="number" name="discount" id="updateDiscountValue" required>
-                <button type="submit">Update</button>
-                <button type="button" onclick="closeModal()" class="back-button">Back</button>
-            </form>
-        </div>
+<!-- Modal for Update Discount/Promo -->
+<!-- Modal for Update Discount/Promo -->
+<div id="editDiscountModal" class="modal">
+    <div class="modal-content">
+        <h3>Edit Discount & Promotion</h3>
+        <form onsubmit="updateDiscount(event)">
+            <input type="hidden" id="editDiscountId">
+            <input type="text" id="editDiscountCustomerName" placeholder="Customer Name">
+            <input type="text" id="editDiscountItem" placeholder="Item">
+            <input type="number" id="editDiscountPrice" placeholder="Price">
+            <input type="number" id="editDiscountValue" placeholder="Discount (%)">
+            <input type="number" id="editPriceAfterDiscount" placeholder="Price After Discount" readonly>
+            <button type="submit">Update</button>
+            <button type="button" onclick="closeModal()">Cancel</button>
+        </form>
     </div>
+</div>
+    
 
     <script>
         // JavaScript functions for opening modals, adding, updating, and deleting
@@ -392,6 +403,94 @@
         function closeModal() {
             document.querySelectorAll('.modal').forEach(modal => modal.style.display = 'none');
         }
+
+        function openEditModal(button) {
+    // Retrieve the data object from the button's data-attribute
+    const data = JSON.parse(button.getAttribute('data-service'));
+    const type = button.getAttribute('data-type');  // Get the type (returns or discounts)
+
+    if (type === 'returns') {
+        // Populate the fields for Return & Refund
+        document.getElementById('editReturnId').value = data.id;
+        document.getElementById('editReturnCustomerName').value = data.customer_name;
+        document.getElementById('editReturnItem').value = data.item;
+        document.getElementById('editReturnQuantity').value = data.quantity;
+        document.getElementById('editReturnReason').value = data.reason;
+        document.getElementById('editReturnPrice').value = data.price;
+        document.getElementById('editReturnModal').style.display = 'flex';
+    } else if (type === 'discounts') {
+        // Populate the fields for Discount & Promotion
+        document.getElementById('editDiscountId').value = data.id;
+        document.getElementById('editDiscountCustomerName').value = data.customer_name;
+        document.getElementById('editDiscountItem').value = data.item;
+        document.getElementById('editDiscountPrice').value = data.price;
+        document.getElementById('editDiscountValue').value = data.discount; // Discount percentage
+        document.getElementById('editPriceAfterDiscount').value = data.price_after_discount; // Price after discount
+        document.getElementById('editDiscountModal').style.display = 'flex';
+    }
+}
+
+function closeModal() {
+    document.querySelectorAll('.modal').forEach(modal => modal.style.display = 'none');
+}
+
+async function updateReturn() {
+    const id = document.getElementById('editReturnId').value;
+    const data = {
+        customer_name: document.getElementById('editReturnCustomerName').value.trim(),
+        item: document.getElementById('editReturnItem').value.trim(),
+        quantity: parseInt(document.getElementById('editReturnQuantity').value, 10),
+        reason: document.getElementById('editReturnReason').value.trim(),
+        price: parseFloat(document.getElementById('editReturnPrice').value),
+    };
+
+    if (!data.customer_name || !data.item || isNaN(data.quantity) || isNaN(data.price)) {
+        alert('Please fill all fields correctly.');
+        return;
+    }
+
+    const response = await fetch(`/services/update/return/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+        location.reload(); // Reload the page after successful update
+    } else {
+        alert('Failed to update return');
+    }
+}
+
+async function updateDiscount(event) {
+    event.preventDefault(); // Prevent form from submitting the default way
+
+    const id = document.getElementById('editDiscountId').value;
+    const data = {
+        customer_name: document.getElementById('editDiscountCustomerName').value.trim(),
+        item: document.getElementById('editDiscountItem').value.trim(),
+        price: document.getElementById('editDiscountPrice').value.trim(),
+        discount: parseFloat(document.getElementById('editDiscountValue').value),
+    };
+
+    if (isNaN(data.discount) || isNaN(data.price_after_discount)) {
+        alert('Please fill all fields correctly.');
+        return;
+    }
+
+    const response = await fetch(`/services/update/discount/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+        closeModal(); // Close the modal after successful update
+        location.reload(); // Reload the page to reflect the update
+    } else {
+        alert('Failed to update discount');
+    }
+}
 
         // Show and hide tabs
         function showTab(tabName) {
@@ -412,21 +511,24 @@
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
         }
-        document.getElementById('price').addEventListener('input', calculatePriceAfterDiscount);
-        document.getElementById('discount').addEventListener('input', calculatePriceAfterDiscount);
+    
+        // Attach event listener for Discount Calculation in the Edit Discount Modal
+        document.getElementById('editDiscountValue').addEventListener('input', calculateDiscountedPrice);
+        document.getElementById('editDiscountPrice').addEventListener('input', calculateDiscountedPrice);
 
-        function calculatePriceAfterDiscount() {
-            const price = parseFloat(document.getElementById('price').value);
-            const discount = parseFloat(document.getElementById('discount').value);
-            const priceAfterDiscountField = document.getElementById('price_after_discount');
+        function calculateDiscountedPrice() {
+            const price = parseFloat(document.getElementById('editDiscountPrice').value); // Original price
+            const discount = parseFloat(document.getElementById('editDiscountValue').value); // Discount percentage
+            const priceAfterDiscountField = document.getElementById('editPriceAfterDiscount');
 
-            if (!isNaN(price) && !isNaN(discount)) {
-                const priceAfterDiscount = price - (price * (discount / 100));
-                priceAfterDiscountField.value = priceAfterDiscount.toFixed(2);
-            } else {
-                priceAfterDiscountField.value = '';
-            }
+        if (!isNaN(price) && !isNaN(discount)) {
+            const priceAfterDiscount = price - (price * (discount / 100));
+            priceAfterDiscountField.value = priceAfterDiscount.toFixed(2); // Update the field dynamically
+        } else {
+            priceAfterDiscountField.value = ''; // Clear field if input is invalid
         }
+}
+
     </script>
 </body>
 </html>

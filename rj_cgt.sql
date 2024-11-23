@@ -51,25 +51,7 @@ INSERT INTO `attendance` (`id`, `employee_id`, `branch`, `location`, `time_in`, 
 ('', '1234', 'calpan', 'dfmcjdsn', '19:59:00', NULL, '2024-11-16', '2024-11-16 12:00:02', '2024-11-16 12:00:02');
 
 -- --------------------------------------------------------
-
---
--- Table structure for table `discount_promotions`
---
-
-CREATE TABLE `discount_promotions` (
-  `id` int(11) NOT NULL,
-  `customer_name` varchar(255) NOT NULL,
-  `item` varchar(255) NOT NULL,
-  `discount` decimal(5,2) DEFAULT NULL,
-  `price_after_discount` decimal(10,2) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `employees`
---
 
 CREATE TABLE `employees` (
   `id` int(11) NOT NULL,
@@ -78,34 +60,8 @@ CREATE TABLE `employees` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `return_refunds`
---
-
-CREATE TABLE `return_refunds` (
-  `id` int(11) NOT NULL,
-  `customer_name` varchar(255) NOT NULL,
-  `item` varchar(255) NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `reason` text DEFAULT NULL,
-  `price` decimal(10,2) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `return_refunds`
---
-
-INSERT INTO `return_refunds` (`id`, `customer_name`, `item`, `quantity`, `reason`, `price`, `created_at`) VALUES
-(1, 'kc', 'ju', 2, 'kjhg', 100.00, '2024-11-09 14:16:19');
-
--- --------------------------------------------------------
-
---
+----------------------------------------------------------------
 -- Table structure for table `tasks`
---
 
 CREATE TABLE `tasks` (
   `id` varchar(11) NOT NULL,
@@ -122,10 +78,7 @@ INSERT INTO `tasks` (`id`, `employee_id`, `task_description`, `task_date`) VALUE
 ('', NULL, 'hshs', '0000-00-00');
 
 -- --------------------------------------------------------
-
---
 -- Table structure for table `users`
---
 
 CREATE TABLE `users` (
   `id_no` varchar(255) NOT NULL,
@@ -154,70 +107,81 @@ INSERT INTO `users` (`id_no`, `name`, `password`, `role`, `createdAt`, `updatedA
 
 --
 -- Indexes for dumped tables
---
-
---
--- Indexes for table `discount_promotions`
---
-ALTER TABLE `discount_promotions`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `employees`
---
+--------------------------------------------------------------
+
 ALTER TABLE `employees`
   ADD PRIMARY KEY (`id`);
 
---
--- Indexes for table `return_refunds`
---
-ALTER TABLE `return_refunds`
-  ADD PRIMARY KEY (`id`);
-
---
+-------------------------------------------------------------
 -- Indexes for table `tasks`
---
+
 ALTER TABLE `tasks`
   ADD KEY `employee_id` (`employee_id`);
 
---
+----------------------------------------------------------
 -- Indexes for table `users`
---
+
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id_no`);
 
---
+
 -- AUTO_INCREMENT for dumped tables
---
 
---
--- AUTO_INCREMENT for table `discount_promotions`
---
-ALTER TABLE `discount_promotions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
+---------------------------------------------------------
 -- AUTO_INCREMENT for table `employees`
---
+
 ALTER TABLE `employees`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `return_refunds`
---
-ALTER TABLE `return_refunds`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
---
 -- Constraints for dumped tables
---
 
---
 -- Constraints for table `tasks`
 --
 ALTER TABLE `tasks`
   ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `users` (`id_no`);
 COMMIT;
+
+-------------------------------------------------------
+
+CREATE TABLE return_refunds (
+    id INT AUTO_INCREMENT PRIMARY KEY,       
+    customer_name VARCHAR(255) NOT NULL,     
+    item VARCHAR(255) NOT NULL,          
+    quantity INT NOT NULL,              
+    reason TEXT NOT NULL,                    
+    price DECIMAL(10, 2) NOT NULL,           
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  
+);
+
+------------------------------------------------------
+
+CREATE TABLE discount_promotions(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_name VARCHAR(255) NOT NULL,
+    item VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    discount DECIMAL(5, 2) NOT NULL,
+    price_after_discount DECIMAL(10, 2) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-------------------------------------------------------
+
+CREATE TABLE inventory (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    category VARCHAR(255) NOT NULL, -- To specify the category (e.g., Groceries, School Supplies)
+    product_name VARCHAR(255) NOT NULL, -- Product name
+    price DECIMAL(10, 2) NOT NULL, -- Price of the product
+    stocks VARCHAR(255) NOT NULL, -- Stock quantity (e.g., 8 Trays, 24 bottles)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Timestamp
+);
+
+----------------------------------------------------------
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

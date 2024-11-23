@@ -54,6 +54,7 @@ exports.updateInventoryItem = async (req, res) => {
     }
 };
 
+
 // Delete an inventory item
 exports.deleteInventoryItem = async (req, res) => {
     const { id } = req.params;

@@ -2,16 +2,55 @@ const express = require('express');
 const router = express.Router();
 const servicesController = require('../controller/servicesController');
 
-// Routes for Return & Refunds
-router.get('/returns', servicesController.getReturns); // Fetch all return & refund records
-router.post('/returns', servicesController.addReturn); // Add a new return & refund
-router.put('/returns/:id', servicesController.updateReturn); // Update a specific return & refund
-router.delete('/returns/:id', servicesController.deleteReturn); // Delete a specific return & refund
+// Get all returns and discounts
+router.get('/', async (req, res) => {
+    try {
+        const returns = await servicesController.getReturns();
+        const discounts = await servicesController.getDiscounts();
+        res.render('services', { returns, discounts });
+    } catch (error) {
+        res.status(500).send('Error fetching data');
+    }
+});
 
-// Routes for Discount & Promotions
-router.get('/discounts', servicesController.getDiscounts); // Fetch all discount & promotion records
-router.post('/discounts', servicesController.addDiscount); // Add a new discount & promotion
-router.put('/discounts/:id', servicesController.updateDiscount); // Update a specific discount & promotion
-router.delete('/discounts/:id', servicesController.deleteDiscount); // Delete a specific discount & promotion
+// Update Return
+router.put('/update/return/:id', async (req, res) => {
+    try {
+        await servicesController.updateReturn(req.params.id, req.body);
+        res.sendStatus(200);
+    } catch (error) {
+        res.status(500).send('Error updating return');
+    }
+});
+
+// Update Discount
+router.put('/update/discount/:id', async (req, res) => {
+    try {
+        await servicesController.updateDiscount(req.params.id, req.body);
+        res.sendStatus(200);
+    } catch (error) {
+        res.status(500).send('Error updating discount');
+    }
+});
+
+// Delete Return
+router.post('/delete/return/:id', async (req, res) => {
+    try {
+        await servicesController.deleteReturn(req.params.id);
+        res.redirect('/services');
+    } catch (error) {
+        res.status(500).send('Error deleting return');
+    }
+});
+
+// Delete Discount
+router.post('/delete/discount/:id', async (req, res) => {
+    try {
+        await servicesController.deleteDiscount(req.params.id);
+        res.redirect('/services');
+    } catch (error) {
+        res.status(500).send('Error deleting discount');
+    }
+});
 
 module.exports = router;

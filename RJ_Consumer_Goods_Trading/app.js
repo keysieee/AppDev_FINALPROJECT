@@ -3,13 +3,11 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const db = require('./config/db');
-const servicesRoutes = require('./routes/services');  // Importing services routes
-const app = express();
-const path = require('path');
+const servicesRoutes = require('./routes/services');
 const tasksRoutes = require('./routes/tasks');
 const inoutRoutes = require('./routes/inout');
 
-app.use('/tasks', tasksRoutes);
+const app = express();
 
 // Middleware for session
 app.use(session({
@@ -36,9 +34,20 @@ app.put('/inout/update/:id', (req, res) => {
 // Middleware for static files and form data parsing
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
+
+// Routes for /tasks
+app.use('/tasks', tasksRoutes);
+
+// Routes for /inventory
+app.use('/inventory', inventoryRoutes);
+
+// Use the services routes (this will catch all /services* routes)
+app.use('/services', servicesRoutes);
 
 // Redirect root to login page
 app.get('/', (req, res) => {
@@ -48,20 +57,15 @@ app.get('/', (req, res) => {
 // Home route with login check
 app.get('/home', (req, res) => {
     if (!req.session.user) {
-        return res.redirect('/login'); 
+        return res.redirect('/login');
     }
-    res.render('home'); 
+    res.render('home');
 });
-
-// Middleware
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
-app.set('view engine', 'ejs');
 
 // InOut route with login check and data retrieval
 app.get('/inout', async (req, res) => {
     if (!req.session.user) {
-        return res.redirect('/login'); 
+        return res.redirect('/login');
     }
 
     try {
@@ -92,12 +96,9 @@ app.post('/inout/add', async (req, res) => {
     }
 });
 
-// Inventory route with login check
-app.get('/inventory', (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/login'); 
-    }
-    res.render('inventory'); 
+// Admin inventory page route with login and admin check
+app.get('/admin/inventory', isAdmin, (req, res) => {
+    res.render('admin/inventory'); // Render inventory page for admins
 });
 
 // EmpShop route with login check
@@ -118,7 +119,7 @@ function isAdmin(req, res, next) {
 
 // Admin route with admin check
 app.get('/admin', isAdmin, (req, res) => {
-    res.render('admin'); 
+    res.render('admin');
 });
 
 // Login page route
@@ -170,23 +171,13 @@ app.post('/signup', async (req, res) => {
     const { id_no, name, password, confirm_password } = req.body;
 
     if (password !== confirm_password) {
-        return res.redirect('/signup'); 
+        return res.redirect('/signup');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     await db.query('INSERT INTO users (id_no, name, password) VALUES (?, ?, ?)', [id_no, name, hashedPassword]);
 
-    res.redirect('/login'); 
-});
-
-// Logout route
-app.get('/logout', (req, res) => {
-    req.session.destroy(err => {
-        if (err) {
-            return res.redirect('/home');
-        }
-        res.redirect('/login');
-    });
+    res.redirect('/login');
 });
 
 // Logout route
@@ -202,7 +193,7 @@ app.get('/logout', (req, res) => {
 // Services route with login check and data retrieval
 app.get('/services', async (req, res) => {
     if (!req.session.user) {
-        return res.redirect('/login'); 
+        return res.redirect('/login');
     }
 
     try {
@@ -255,8 +246,10 @@ app.post('/services/add/discount', async (req, res) => {
     }
 });
 
-// Use the services routes (this will catch all /services* routes)
-app.use('/services', servicesRoutes);
+// Error handling for undefined routes
+app.use((req, res) => {
+    res.status(404).send('Page not found');
+});
 
 // Start the server
 const PORT = process.env.PORT || 3000;

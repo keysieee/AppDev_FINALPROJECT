@@ -4,14 +4,9 @@ const User = require('../models/user');
 const router = express.Router();
 
 // Login route
-router.get('/login', (req, res) => {
-    res.render('login');
-});
-
 router.post('/login', async (req, res) => {
     const { id_no, password } = req.body;
     try {
-
         const results = await User.findUserById(id_no);
         if (results.length > 0) {
             const user = results[0];
@@ -19,7 +14,13 @@ router.post('/login', async (req, res) => {
             if (isMatch) {
                 req.session.loggedin = true;
                 req.session.name = user.name;
-                return res.redirect('/home');
+                req.session.role = user.role; // Save role in session
+                
+                // Redirect based on role
+                if (user.role === 'admin') {
+                    return res.redirect('/admin/dashboard'); // Admin dashboard
+                }
+                return res.redirect('/home'); // Regular user home page
             } else {
                 return res.send('Incorrect Password!');
             }
@@ -48,6 +49,9 @@ router.post('/signup', async (req, res) => {
         res.send('Error signing up. Please try again.');
     }
 });
+
+module.exports = ensureAuthenticated;
+
 
 // Logout route
 router.get('/logout', (req, res) => {

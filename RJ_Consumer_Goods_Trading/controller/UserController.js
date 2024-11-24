@@ -25,8 +25,12 @@ exports.login = async (req, res) => {
         const match = await bcrypt.compare(password, user.password);
         if (!match) return res.status(400).send('Incorrect password');
         
-        // User authenticated; redirect to home or create session logic
-        res.redirect('/home');
+        // Check role and redirect accordingly
+        if (user.role === 'admin') {
+            res.redirect('/admin/dashboard'); // Adjust your admin dashboard route
+        } else {
+            res.redirect('/home'); // Regular user home page
+        }
     } catch (err) {
         console.error('Error in login:', err);
         res.status(500).send('Server error');

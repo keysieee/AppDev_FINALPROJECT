@@ -7,6 +7,7 @@ const servicesRoutes = require('./routes/services');  // Importing services rout
 const app = express();
 const path = require('path');
 const tasksRoutes = require('./routes/tasks');
+const inoutRoutes = require('./routes/inout');
 
 app.use('/tasks', tasksRoutes);
 
@@ -17,6 +18,8 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: false }
 }));
+
+app.use('/inout', inoutRoutes);
 
 const methodOverride = require('method-override');
 app.use(methodOverride('_method'));
@@ -123,26 +126,38 @@ app.get('/login', (req, res) => {
     res.render('login');
 });
 
-// Login form submission handling
 app.post('/login', async (req, res) => {
     const { id_no, password } = req.body;
 
-    if (id_no === 'admin' && password === 'admin') {
-        req.session.loggedin = true;
-        req.session.role = 'admin';
-        return res.redirect('/admin');
-    }
+    try {
+        // Fetch user by ID
+        const [rows] = await db.query('SELECT * FROM users WHERE id_no = ?', [id_no]);
 
-    const [rows] = await db.query('SELECT * FROM users WHERE id_no = ?', [id_no]);
-    if (rows.length > 0) {
-        const user = rows[0];
-        const match = await bcrypt.compare(password, user.password);
-        if (match) {
-            req.session.user = user; 
-            return res.redirect('/home');
+        if (rows.length > 0) {
+            const user = rows[0];
+            const match = await bcrypt.compare(password, user.password);
+
+            if (match) {
+                req.session.loggedin = true;
+                req.session.user = user;
+                req.session.role = user.role; // Set the role from the database
+
+                // Redirect based on role
+                if (user.role === 'admin') {
+                    return res.redirect('/admin'); // Redirect to admin dashboard
+                } else if (user.role === 'employee') {
+                    return res.redirect('/home'); // Redirect to employee home page
+                }
+            } else {
+                return res.status(400).send('Incorrect password!');
+            }
+        } else {
+            return res.status(404).send('User not found!');
         }
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).send('An error occurred. Please try again.');
     }
-    res.redirect('/login'); 
 });
 
 // Signup page route

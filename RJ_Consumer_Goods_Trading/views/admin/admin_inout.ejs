@@ -374,6 +374,8 @@
                     </form>
                 </div>
             </div>
+            
+
             <section class="content">
                 <!-- Existing Table of Attendance Records -->
                 <table>
@@ -385,6 +387,7 @@
                             <th>Time In</th>
                             <th>Time Out</th>
                             <th>Date</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -396,10 +399,16 @@
                                 <td><%= record.time_in %></td>
                                 <td><%= record.time_out %></td>
                                 <td><%= record.date %></td>
+                                <td>
+                                    <form action="/inout/update/<%= record.id %>" method="POST" style="display:inline;">
+                                        <input type="hidden" name="_method" value="PATCH">
+                                        <button type="submit">Update</button>
+                                    </form>                                                                        
+                                </td>
                             </tr>
-                        <% }); %>
+                        <% }) %>
                     </tbody>
-                </table>                
+                </table>
             </section>
         </main>
     </div>

@@ -1,17 +1,22 @@
-// Add attendance record
-router.post('/inout/add', async (req, res) => {
-    const { employee_id, branch, location, time_in, time_out, date } = req.body;
-    try {
-        await db.query(
-            'INSERT INTO attendance (employee_id, branch, location, time_in, time_out, date) VALUES (?, ?, ?, ?, ?, ?)',
-            [employee_id, branch, location, time_in, time_out, date]
-        );
-        res.redirect('/inout');
-    } catch (err) {
-        console.error("Error adding attendance record:", err);
-        res.status(500).send("Server error");
-    }
-});
+// routes/inout.js
+const express = require('express');
+const router = express.Router();
+const inoutController = require('../controller/inoutController');
+const ensureAuthenticated = require('../middlewares/authMiddleware');
+
+// Debugging line: Log the controller function
+console.log(inoutController.getEmployeeAttendance); // It should log as a function
+router.get('/', inoutController.getEmployeeAttendance);
+
+// Route to show update attendance form
+router.get('/update/:id', inoutController.showUpdateAttendance);
+
+// Route to update attendance record
+router.post('/update/:id', inoutController.updateAttendance);
+
+module.exports = router;
+
+
 
 // Update attendance - Show form
 exports.showUpdateAttendance = async (req, res) => {
@@ -34,7 +39,7 @@ exports.updateAttendance = async (req, res) => {
     const { time_in, time_out, branch, location } = req.body;
     const sql = 'UPDATE attendance SET time_in = ?, time_out = ?, branch = ?, location = ? WHERE id = ?';
     try {
-        await db.query(sql, [time_in, time_put, branch, location, id]);
+        await db.query(sql, [time_in, time_out, branch, location, id]);
         res.redirect('/inout');
     } catch (err) {
         console.error("Error updating attendance record:", err);

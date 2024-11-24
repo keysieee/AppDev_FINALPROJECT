@@ -14,7 +14,7 @@
             color: black;
             background: url('images/background.png') no-repeat center center fixed;
             background-size: cover;
-        } 
+        }
         /* Main container */
         .container {
             display: flex;
@@ -44,7 +44,6 @@
             margin-bottom: 30px;
             text-align: center;
         }
-    
         .sidebar a {
             display: block;
             padding: 10px;
@@ -264,15 +263,15 @@
         </div>
 <main>
     <header class="header">
-        <input type="text" placeholder="Search" class="search">
+
         <div class="icons">
             <a href="/home" class="icon">🏠</a>
             <span class="icon">👤</span>
         </div>
+        <input type="text" placeholder="Search" class="search">
     </header>
 
     <section class="content">
-        
         <!-- Tabs -->
         <div class="tab-container">
             <div class="tabs">
@@ -374,7 +373,6 @@
             <input type="text" name="customer_name" placeholder="Customer Name" required>
 
             <input type="text" name="item" placeholder="Item" required>
-            
             <!-- Price Input -->
             <input type="number" name="price" id="price" placeholder="Price" step="0.01" required>
 
@@ -382,13 +380,13 @@
             <input type="number" name="discount" id="discount" placeholder="Discount (%)" step="0.01" required>
 
             <!-- Calculated Price After Discount -->
-            <input 
-                type="number" 
-                name="price_after_discount" 
-                id="price_after_discount" 
-                placeholder="Price After Discount" 
-                step="0.01" 
-                readonly 
+            <input
+                type="number"
+                name="price_after_discount"
+                id="price_after_discount"
+                placeholder="Price After Discount"
+                step="0.01"
+                readonly
             >
 
             <button type="submit">Submit</button>
@@ -432,7 +430,6 @@
         </form>
     </div>
 </div>
-    
 
     <script>
         // JavaScript functions for opening modals, adding, updating, and deleting
@@ -577,6 +574,6 @@ async function updateDiscount(event) {
         }
 }
 
-    </script>
+</script>
 </body>
 </html>

@@ -5,58 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Services</title>
     <style>
-        /* Reset some default styles */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        /* Background and font settings */
-        body, html {
+        body {
             font-family: Arial, sans-serif;
-            height: 100%;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            color: black;
             background: url('images/background.png') no-repeat center center fixed;
             background-size: cover;
-        }
-
+        } 
         /* Main container */
-        .container { display: flex; }
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
 
         /* Sidebar styling */
         .sidebar {
-            width: 250px;
-            background-color: #3e3e3e;
-            padding: 30px;
-            color: white;
+            width: 15%; /* Sidebar width */
+            background-color: #3e3e3e; /* Dark gray background for sidebar */
+            padding: 20px;
+            color: white; /* Sidebar text color */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow effect */
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-direction: column; /* Stack items vertically */
+            align-items: center; /* Center items horizontally */
         }
-
-        .logo img { width: 60px; border-radius: 50%; }
-        .logo h2 { text-align: center; margin-top: 10px; font-size: 1.1em; }
-
-        /* Sidebar menu items */
-        .sidebar nav { margin-top: 30px; width: 100%; }
-        .menu-item {
+        .sidebar img {
+            width: 100px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .sidebar .store-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+    
+        .sidebar a {
             display: block;
             padding: 10px;
-            margin-bottom: 10px;
-            background-color: #8d4444;
+            color: white;
             text-decoration: none;
-            color: white;
-            text-align: center;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
             border-radius: 5px;
-        }
-        .menu-item.active { background-color: #ff4a4a; }
-
-        /* Logout button styling */
-        .logout {
-            margin-top: auto;
-            padding: 10px;
-            background-color: #ff4a4a;
-            color: white;
+            transition: background 0.3s;
             width: 100%;
+            text-align: center;
+        }
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #575757; /* Updated color */
+        }
+
+        .logout-button {
+            background-color: darkred;
+            color: white;
+            padding: 10px;
             border: none;
-            cursor: pointer;
             border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        .logout-button:hover {
+            background: rgba(255, 0, 0, 0.2);
         }
 
         /* Main content styling */
@@ -82,6 +101,15 @@
         .icons .icon {
             margin-left: 10px;
             cursor: pointer;
+        }
+        footer {
+            width: 100%;
+            background: darkgray;
+            padding: 15px;
+            color: black;
+            display: flex;
+            justify-content: flex-start;
+            position: relative;
         }
 
         /* Content area */
@@ -199,21 +227,41 @@
 <body>
     <div class="container">
         <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo">
-                <img src="images/logo.png" alt="R&J Logo">
-                <h2>R&J CONSUMER GOODS TRADING</h2>
+        <div class="sidebar">
+            <img src="images/logo.png" alt="R&J Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
+            <div class="store-name">
+                R&J Consumer Goods Trading
             </div>
-            <nav>
-                <a href="/tasks" class="menu-item">Tasks</a>
-                <a href="/inout" class="menu-item">In/Out</a>
-                <a href="/services" class="menu-item active">Services</a>
-                <a href="/inventory" class="menu-item">Inventory</a>
-                <a href="/empshop" class="menu-item">Shop</a>
-            </nav>
-            <button class="logout" onclick="window.location.href='/logout'">Logout</button>
-        </aside>
-
+            <br>
+            <a href="/tasks" class="menu-item">Tasks</a>
+            <a href="/inout" class="menu-item">In/Out</a>
+            <a href="/services" class="menu-item active">Services</a>
+            <a href="/inventory" class="menu-item">Inventory</a>
+            <a href="/empshop" class="menu-item">Shop</a>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <button class="logout-button" onclick="window.location.href='/logout'">Logout</button>
+        </div>
 <main>
     <header class="header">
         <input type="text" placeholder="Search" class="search">

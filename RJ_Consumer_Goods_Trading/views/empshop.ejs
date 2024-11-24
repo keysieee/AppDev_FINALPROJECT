@@ -5,84 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Shop</title>
     <style>
-        /* Reset some default styles */
-        * {
+        body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Background and font settings */
-        body, html {
-            font-family: Arial, sans-serif;
-            height: 100%;
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            color: white; /* Text color changed to white */
             background: url('images/background.png') no-repeat center center fixed;
             background-size: cover;
         }
-
-        /* Main container */
         .container {
             display: flex;
+            width: 100%;
+            height: 100%;
         }
-
-        /* Sidebar styling */
         .sidebar {
-            width: 250px;
-            background-color: #3e3e3e;
-            padding: 30px;
-            color: white;
+            width: 15%; /* Sidebar width */
+            background-color: #3e3e3e; /* Dark gray background for sidebar */
+            padding: 20px;
+            color: white; /* Sidebar text color */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow effect */
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-direction: column; /* Stack items vertically */
+            align-items: center; /* Center items horizontally */
         }
-
-        .logo img {
-            width: 60px;
-            border-radius: 50%;
+        .sidebar img {
+            width: 100px;
+            height: auto;
+            margin-bottom: 20px;
         }
-
-        .logo h2 {
+        .sidebar .store-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 30px;
             text-align: center;
-            margin-top: 10px;
-            font-size: 1.1em;
         }
-
-        /* Sidebar menu items */
-        .sidebar nav {
-            margin-top: 30px;
-            width: 100%;
-        }
-
-        .menu-item {
-            display: block;
+        .sidebar a {
+            display: block; /* Block display for links */
             padding: 10px;
-            margin-bottom: 10px;
-            background-color: #8d4444;
+            color: white; /* Link color in sidebar */
             text-decoration: none;
-            color: white;
-            text-align: center;
-            border-radius: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc; /* Border for buttons */
+            border-radius: 5px; /* Rounded corners */
+            transition: background 0.3s; /* Smooth background change */
+            width: 100%; /* Make links full width */
+            text-align: center; /* Center align text */
         }
-
-        .menu-item.active {
-            background-color: #ff4a4a;
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #575757;
         }
-
-        /* Logout button styling */
-        .logout {
-            margin-top: auto;
-            padding: 10px;
-            background-color: #ff4a4a;
-            color: white;
-            width: 100%;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
+        .logout-button {
+            background-color: darkred; /* Red background for logout button */
+            color: white; /* Text color */
+            padding: 10px; /* Padding for button */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            width: 100%; /* Make button full width */
+            text-align: center; /* Center align text */
+            margin-top: 10px; /* Space above the button */
+            transition: background 0.3s; /* Smooth background change */
         }
-
-        /* Main content styling */
-        main {
-            flex: 1;
+        .logout-button:hover {
+            background: rgba(255, 0, 0, 0.2); /* Slight transparency on hover */
+        }
+        .main-content {
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
             padding: 20px;
@@ -92,47 +83,89 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        .search {
-            padding: 10px;
+        .header .left-icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .header .left-icons .icon {
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 1.5em;
+        }
+
+        .header .search {
+            margin-left: 20px;
+        }
+
+        .header .search input {
+            padding: 8px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
 
-        .icons .icon {
-            margin-left: 10px;
-            cursor: pointer;
-        }
-
-        /* Content area */
-        .content {
-            margin-top: 20px;
-        }
-
-        .content h2 {
+        .header .center-text {
+            flex-grow: 1;
+            text-align: center;
             font-size: 1.5em;
-            color: #336666;
         }
-
+        .store-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: white; /* Store name color */
+            text-align: center; /* Center align text */
+        }
+        .store-logo {
+            height: 60px; /* Adjust logo height */
+            margin-bottom: 10px; /* Space between logo and text */
+        }
+        .content {
+            flex-grow: 1; /* Allow content area to grow */
+            padding: 20px;
+            color: white; /* Content text color */
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
+            border-radius: 5px; /* Rounded corners */
+            margin-top: 10px; /* Reduced space between header and content */
+            display: flex;
+            justify-content: center; /* Center content horizontally */
+            align-items: center; /* Center content vertically */
+            flex-direction: column; /* Stack items vertically */
+        }
+        footer {
+            width: 100%;
+            background: darkgray; /* Dark gray background for footer */
+            padding: 15px; /* Space around footer */
+            color: black; /* Footer text color */
+            display: flex;
+            justify-content: flex-start; /* Align items to the left */
+            position: relative; /* Position relative to the content */
+        }
+        .content img {
+            max-width: 100%; /* Make image responsive */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 5px; /* Rounded corners for images */
+        }
         /* Table styling */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
         }
-
         th, td {
             padding: 15px;
             text-align: left;
             border: 1px solid #ccc;
         }
-
         th {
             background-color: #8c8c8c;
             color: white;
         }
-
         td {
             background-color: #ddd;
         }
@@ -141,32 +174,55 @@
 <body>
     <div class="container">
         <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo">
-                <img src="images/logo.png" alt="R&J Logo">
-                <h2>R&J CONSUMER GOODS TRADING</h2>
+        <div class="sidebar">
+            <img src="images/logo.png" alt="R&J Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
+            <div class="store-name">
+                R&J Consumer Goods Trading
             </div>
-            <nav>
-                <a href="/tasks" class="menu-item">Tasks</a>
-                <a href="/inout" class="menu-item">In/Out</a>
-                <a href="/services" class="menu-item">Services</a>
-                <a href="/inventory" class="menu-item">Inventory</a>
-                <a href="/empshop" class="menu-item active">Shop</a>
-            </nav>
-            <button class="logout" onclick="window.location.href='/logout'">Logout</button>
-        </aside>
-
+            <br>
+            <a href="/tasks" class="menu-item ">Tasks</a>
+            <a href="/inout" class="menu-item">In/Out</a>
+            <a href="/services" class="menu-item">Services</a>
+            <a href="/inventory" class="menu-item">Inventory</a>
+            <a href="/empshop" class="menu-item active">Shop</a>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <button class="logout-button" onclick="window.location.href='/logout'">Logout</button>
+        </div>
+        
         <!-- Main Content -->
-        <main>
+        <div class="main-content">
             <header class="header">
-                <input type="text" placeholder="Type here..." class="search">
-                <div class="icons">
+                <div class="left-icons">
                     <a href="/home" class="icon">🏠</a>
                     <span class="icon">👤</span>
                 </div>
+                <h1>Branches / Shop</h1>
+                <div class="search">
+                    <input type="text" placeholder="Search tasks...">
+                </div>
             </header>
-
-            <section class="content">
+            <div class="content">
                 <h2>Branches / Shop</h2>
                 <table>
                     <tr>
@@ -174,8 +230,8 @@
                         <th>Location</th>
                     </tr>
                 </table>
-            </section>
-        </main>
+            </div>
+        </div>
     </div>
 </body>
 </html>

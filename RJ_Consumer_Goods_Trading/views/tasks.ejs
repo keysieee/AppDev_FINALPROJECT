@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task List</title>
-  <style>
-      body {
-          font-family: Arial, sans-serif;
-          margin: 0;
-          padding: 0;
-          height: 100vh;
-          display: flex;
-          color: white;
-          background: url('images/background.png') no-repeat center center fixed;
-          background-size: cover;
-      }
-      .container {
-          display: flex;
-          width: 100%;
-          height: 100%;
-      }
-      .sidebar {
-          width: 15%;
-          background-color: #3e3e3e;
-          padding: 20px;
-          color: white;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-      }
-      .sidebar img {
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List</title>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            color: white;
+            background: url('images/background.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        .sidebar {
+            width: 15%;
+            background-color: #3e3e3e;
+            padding: 20px;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sidebar img {
             width: 100px;
             height: auto;
             margin-bottom: 20px;
@@ -43,214 +43,214 @@
             text-align: center;
         }
 
-      .sidebar a {
-          display: block;
-          padding: 10px;
-          color: white;
-          text-decoration: none;
-          margin-bottom: 10px;
-          border: 1px solid #ccc;
-          border-radius: 5px;
-          transition: background 0.3s;
-          width: 100%;
-          text-align: center;
-      }
-       .sidebar a:hover,
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: background 0.3s;
+            width: 100%;
+            text-align: center;
+        }
+        .sidebar a:hover,
         .sidebar a.active {
             background-color: #575757;
         }
-      .logout-button {
-          background-color: darkred;
-          color: white;
-          padding: 10px;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-          width: 100%;
-          text-align: center;
-          margin-top: 10px;
-          transition: background 0.3s;
-      }
-      .logout-button:hover {
-          background: rgba(255, 0, 0, 0.2);
-      }
-      .main-content {
-          flex-grow: 1;
-          display: flex;
-          flex-direction: column;
-          padding: 20px;
-      }
-      header {
-          width: 100%;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 10px;
+        .logout-button {
+            background-color: darkred;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        .logout-button:hover {
+            background: rgba(255, 0, 0, 0.2);
+        }
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
           background: rgba(255, 255, 255, 0.0); /* Transparent background */
-          z-index: 1;
-      }
-      .store-name {
-          font-size: 24px;
-          font-weight: bold;
-          color: white;
-          text-align: center;
-      }
-      .store-logo {
-          height: 60px;
-          margin-bottom: 10px;
-      }
-      .content {
-          flex-grow: 1;
-          padding: 20px;
-          color: white;
-          box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
-          border-radius: 5px;
-          margin-top: 20px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-direction: column;
-      }
-      footer {
-          width: 100%;
-          background: darkgray;
-          padding: 15px;
-          color: black;
-          display: flex;
-          justify-content: flex-start;
-          position: relative;
-      }
-      .content img {
-          max-width: 100%;
-          height: auto;
-          border-radius: 5px;
-      }
-      .task-container {
-          flex-grow: 1;
-          padding: 20px;
-          color: white;
-          box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
-          border-radius: 5px;
-          margin-top: 0;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
-          align-items: center;
-      }
-      table {
-          width: 100%;
-          border-collapse: collapse;
-          margin-top: 10px;
-      }
-      th, td {
-          padding: 15px;
-          text-align: left;
-          border: 1px solid #ccc;
-      }
-      th {
-          background-color: #8c8c8c;
-          color: white;
-      }
-      td {
-          background-color: #ddd;
-      }
-      .search {
-          padding: 5px 10px;
-          font-size: 12px;
-          border-radius: 15px;
-          border: none;
-          background-color: #f9f9f9;
-          margin-left: 10px;
-      }
-      .icons {
-          display: flex;
-          align-items: center;
-      }
-      .icons .icon {
-          margin-left: 5px;
-          cursor: pointer;
-          font-size: 1.5em;
-      }
-  </style>
+            z-index: 1;
+        }
+        .store-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+        }
+        .store-logo {
+            height: 60px;
+            margin-bottom: 10px;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            color: white;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        footer {
+            width: 100%;
+            background: darkgray;
+            padding: 15px;
+            color: black;
+            display: flex;
+            justify-content: flex-start;
+            position: relative;
+        }
+        .content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .task-container {
+            flex-grow: 1;
+            padding: 20px;
+            color: white;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-top: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+        th {
+            background-color: #8c8c8c;
+            color: white;
+        }
+        td {
+            background-color: #ddd;
+        }
+        .search {
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 15px;
+            border: none;
+            background-color: #f9f9f9;
+            margin-left: 10px;
+        }
+        .icons {
+            display: flex;
+            align-items: center;
+        }
+        .icons .icon {
+            margin-left: 5px;
+            cursor: pointer;
+            font-size: 1.5em;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-      <!-- Sidebar -->
-      <div class="sidebar">
-          <img src="images/logo.png" alt="R&J Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
-          <div class="store-name">
-              R&J Consumer Goods Trading
-          </div>
-          <br>
-          <a href="/tasks" class="menu-item active">Tasks</a>
-          <a href="/inout" class="menu-item">In/Out</a>
-          <a href="/services" class="menu-item">Services</a>
-          <a href="/inventory" class="menu-item">Inventory</a>
-          <a href="/empshop" class="menu-item">Shop</a>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <button class="logout-button" onclick="window.location.href='/logout'">Logout</button>
-      </div>
+        <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <img src="images/logo.png" alt="R&J Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
+            <div class="store-name">
+                R&J Consumer Goods Trading
+            </div>
+            <br>
+            <a href="/tasks" class="menu-item active">Tasks</a>
+            <a href="/inout" class="menu-item">In/Out</a>
+            <a href="/services" class="menu-item">Services</a>
+            <a href="/inventory" class="menu-item">Inventory</a>
+            <a href="/empshop" class="menu-item">Shop</a>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <button class="logout-button" onclick="window.location.href='/logout'">Logout</button>
+        </div>
 
-      <!-- Main Content -->
-      <div class="main-content">
-          <header class="header">
-              <div class="icons">
-                  <a href="/home" class="icon">🏠</a>
-                  <span class="icon">👤</span>
-              </div>
-              <h1>Task List</h1>
-              <input type="text" class="search" placeholder="Search tasks...">
-          </header>
-          <div class="task-container">
-              <!-- Task table for the employee -->
-              <table>
-                  <thead>
-                      <tr>
-                          <th>Task Description</th>
-                          <th>Status</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <% tasks.forEach(task => { %>
-                          <tr>
-                              <td><%= task.description %></td>
-                              <td>
-                                  <% if (task.completed) { %>
-                                      <span>Completed</span>
-                                  <% } else { %>
-                                      <!-- Task completion checkbox -->
-                                      <form action="/tasks/complete/<%= task.id %>" method="POST" style="display: inline;">
-                                          <input type="checkbox" onclick="this.form.submit()" <%= task.completed ? 'checked' : '' %> disabled>
-                                      </form>
-                                  <% } %>
-                              </td>
-                          </tr>
-                      <% }) %>
-                  </tbody>
-              </table>
-          </div>
-      </div>
-  </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="header">
+                <div class="icons">
+                    <a href="/home" class="icon">🏠</a>
+                    <span class="icon">👤</span>
+                </div>
+                <h1>Task List</h1>
+                <input type="text" class="search" placeholder="Search tasks...">
+            </header>
+            <div class="task-container">
+                <!-- Task table for the employee -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Task Description</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% tasks.forEach(task => { %>
+                            <tr>
+                                <td><%= task.description %></td>
+                                <td>
+                                    <% if (task.completed) { %>
+                                        <span>Completed</span>
+                                    <% } else { %>
+                                        <!-- Task completion checkbox -->
+                                        <form action="/tasks/complete/<%= task.id %>" method="POST" style="display: inline;">
+                                            <input type="checkbox" onclick="this.form.submit()" <%= task.completed ? 'checked' : '' %> disabled>
+                                        </form>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

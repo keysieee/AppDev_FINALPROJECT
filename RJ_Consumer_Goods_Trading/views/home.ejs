@@ -59,18 +59,17 @@
             background-color: #ff4a4a;
         }
         .menu-item {
-        display: block;
-        padding: 10px;
-        margin-bottom: 10px;
-        background-color: #8d4444;
-        text-decoration: none;
-        color: white;
-        text-align: center;
-        border-radius: 5px;
+            display: block;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #8d4444;
+            text-decoration: none;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
         }
-
         .menu-item.active {
-        background-color: #ff4a4a;
+            background-color: #ff4a4a;
         }
         .logout-button {
             background-color: darkred; /* Red background for logout button */
@@ -88,10 +87,16 @@
             background: rgba(255, 0, 0, 0.2); /* Slight transparency on hover */
         }
         .main-content {
-            flex-grow: 1; /* Allow main content to grow */
+            flex-grow: 1; /* Allow main content to fill available space */
             display: flex;
             flex-direction: column; /* Stack header and content vertically */
             padding: 20px;
+            overflow: hidden; /* Prevent overflow causing scrollbars */
+        }
+        header img {
+            max-width: 300%; /* Ensure the image doesn't exceed the header's width */
+            max-height: 300px; /* Restrict the height of the image */
+            object-fit: contain; /* Maintain aspect ratio */
         }
         header {
             width: 100%;
@@ -99,18 +104,14 @@
             justify-content: center; /* Center align store name */
             align-items: center;
             padding: 10px; /* Increased padding for more space */
-            background: lightgray; /* Background for header */
+            background: transparent; /* Make background transparent */
             z-index: 1; /* Ensure header is above the background */
         }
-        .store-name {
-            font-size: 24px;
-            font-weight: bold;
-            color: white; /* Store name color */
-            text-align: center; /* Center align text */
-        }
-        .store-logo {
-            height: 60px; /* Adjust logo height */
-            margin-bottom: 10px; /* Space between logo and text */
+        .content h2 img {
+            max-width: 100%; /* Restrict width to the container's width */
+            max-height: 300px; /* Adjust height limit to fit on screen */
+            object-fit: cover; /* Ensure image covers the space without distortion */
+            margin: 0 auto; /* Center the image horizontally */
         }
         .content {
             flex-grow: 1; /* Allow content area to grow */
@@ -144,11 +145,9 @@
     <div class="container">
         <!-- Sidebar -->
         <div class="sidebar">
-            <img src="images/employee.png" alt="R&J Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
-            <div class="store-name">
-                EMPLOYEE
-            </div>
-            <br> <br>
+            <img src="images/employee.png" alt="R&J Logo" class="store-logo">
+            <div class="store-name">EMPLOYEE</div>
+            <br><br>
             <a href="/tasks">Tasks</a>
             <a href="/inout">In/Out</a>
             <a href="/services">Services</a>
@@ -159,34 +158,13 @@
         <!-- Main Content -->
         <div class="main-content">
             <header>
-                <img src="images/home.png" alt="Home Image"> <!-- Replace with the path to your image -->
+                <img src="images/home.png" alt="Home Image">
             </header>
             <div class="content">
-                <h2>Welcome to RJ Consumer Goods Trading Employee Management System</h2>
-                <p>
-                    At RJ Consumer Goods Trading, we value our employees 
-                </p>
-                    as the cornerstone of our success.
-                <p>
-                    Our Employee Management System is designed to create a seamless 
-                </p>
-                    and efficient work environment for our team, fostering growth,
-                <p>
-                    collaboration, and innovation. Whether you're tracking your work hours,
-                </p>
-                    managing tasks, or connecting with colleagues, our system is here 
-                <p>
-                    to support you every step of the way.
-                </p>
-                <p>
-                    Explore a user-friendly interface tailored to meet your professional needs 
-                </p>
-                    and enhance your work experience. Join us in building a 
-                <p>
-                    dynamic and productive workplace where your contributions are 
-                </p>
-                    recognized and your career flourishes.
-            </p>
+                <h2>
+                    <img src="images/home1.jpg" alt="Home Image">
+                    <img src="images/home2.jpg" alt="Home Image">
+                </h2>
             </div>
         </div>
     </div>

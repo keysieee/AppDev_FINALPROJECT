@@ -5,33 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>In/Out</title>
     <style>
-        body {
+       body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            height: 100vh;
+            height: 100vh; /* Full viewport height */
             display: flex;
-            color: black;
+            flex-direction: column; /* Stack header, sidebar, and content vertically */
+            color: black; /* Text color changed to white */
             background: url('images/background.png') no-repeat center center fixed;
             background-size: cover;
         }
-        .container {
-            display: flex;
+        .header {
             width: 100%;
-            height: 100%;
-        }
-        .sidebar {
-            width: 15%;
-            background-color: #3e3e3e; /* Updated color */
-            padding: 20px;
-            color: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            background-color: transparent; /* New header color */
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header .left-icons {
+            display: flex;
             align-items: center;
         }
+        .header .left-icons img {
+            height: 60px; /* Adjust logo height */
+            margin-right: 10px; /* Space between logo and text */
+        }
+        .header .left-icons .store-name {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .header .right-icons {
+            display: flex;
+            align-items: center;
+        }
+        .header .right-icons .icon {
+            margin-left: 20px;
+            cursor: pointer;
+            font-size: 1.5em;
+        }
+        .header .search {
+            margin-left: 20px;
+        }
+        .header .search input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .container {
+            display: flex;
+            flex: 1; /* Allow container to take up remaining space */
+            width: 100%;
+        }
+        .sidebar {
+            width: 15%; /* Sidebar width */
+            background-color: #3e3e3e; /* Dark gray background for sidebar */
+            padding: 20px;
+            color: white; /* Sidebar text color */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow effect */
+            display: flex;
+            flex-direction: column; /* Stack items vertically */
+            align-items: center; /* Center items horizontally */
+        }
         .sidebar img {
-            width: 100px;
+            width: 150px;
             height: auto;
             margin-bottom: 20px;
         }
@@ -42,73 +82,60 @@
             text-align: center;
         }
         .sidebar a {
-            display: block;
+            display: block; /* Block display for links */
             padding: 10px;
-            color: white;
+            color: white; /* Link color in sidebar */
             text-decoration: none;
             margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            transition: background 0.3s;
-            width: 100%;
-            text-align: center;
+            border: 1px solid #ccc; /* Border for buttons */
+            border-radius: 5px; /* Rounded corners */
+            transition: background 0.3s; /* Smooth background change */
+            width: 100%; /* Make links full width */
+            text-align: center; /* Center align text */
         }
         .sidebar a:hover,
         .sidebar a.active {
-            background-color: #575757; /* Updated color */
+            background-color: #ff4a4a;
         }
-        .logo img {
-            width: 60px;
-            border-radius: 50%;
+        .menu-item {
+        display: block;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #8d4444;
+        text-decoration: none;
+        color: white;
+        text-align: center;
+        border-radius: 5px;
         }
-        .logo h2 {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 1.1em;
+
+        .menu-item.active {
+        background-color: #ff4a4a;
         }
         .logout-button {
-            background-color: darkred;
-            color: white;
+            margin-top: auto;
             padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            text-align: center;
-            margin-top: 10px;
-            transition: background 0.3s;
+            background-color: darkred; /* Logout button background color */
+            color: white; /* Text color */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            width: 100%; /* Make button full width */
+            text-align: center; /* Center align text */
+            transition: background 0.3s; /* Smooth background change */
         }
         .logout-button:hover {
-            background: rgba(255, 0, 0, 0.2);
+            background: rgba(255, 0, 0, 0.2); /* Hover background color */
         }
         main {
             flex: 1;
             display: flex;
             flex-direction: column;
             padding: 20px;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .search {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            position: relative;
         }
         .icons .icon {
             margin-left: 10px;
             cursor: pointer;
-        }
-        footer {
-            width: 100%;
-            background: darkgray;
-            padding: 15px;
-            color: black;
-            display: flex;
-            justify-content: flex-start;
-            position: relative;
         }
         .content {
             margin-top: 20px;
@@ -247,24 +274,31 @@
             margin-bottom: 0;
         }
 
-        /* Adjust search input size */
-        .search {
-            padding: 8px 15px;
-            font-size: 14px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            width: px;
-        }
-
     </style>
 </head>
 <body>
+     <!-- Header -->
+     <header class="header">
+        <div class="left-icons">
+            <img src="images/logo.png" alt="R&J Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
+            <div class="store-name">
+                RJ CONSUMER GOODS TRADING
+            </div>
+        </div>
+        <div class="right-icons">
+            <a href="/home" class="icon">🏠</a>
+            <span class="icon">👤</span>
+            <div class="search">
+                <input type="text" placeholder="Search tasks...">
+            </div>
+        </div>
+    </header>
     <div class="container">
         <!-- Sidebar -->
         <div class="sidebar">
-            <img src="images/logo.png" alt="R&J Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
+            <img src="images/employee.png" alt="Employee Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
             <div class="store-name">
-                R&J Consumer Goods Trading
+                EMPLOYEE
             </div>
             <br>
             <a href="/tasks" class="menu-item">Tasks</a>
@@ -274,175 +308,91 @@
             <a href="/empshop" class="menu-item">Shop</a>
             <button class="logout-button" onclick="window.location.href='/logout'">Logout</button>
         </div>
-        <!-- Main Content -->
         <main>
-            <header class="header">
-                <div class="icons">
-                    <a href="/home" class="icon">🏠</a>
-                    <span class="icon">👤</span>
-                </div>
-            </header>
-
-            <!-- Button to trigger modal -->
-            <button class="create-btn" id="createRecordBtn">Create Record</button>
-
-            <!-- Modal with input form -->
-            <div id="attendanceModal" class="modal">
-                <div class="modal-content">
-                    <span class="close" id="closeModalBtn">&times;</span>
-                    <h2>Add Attendance Record</h2>
-                    <form action="/inout/add" method="POST">
-                        <ul class="form-container">
-                            <li>
-                                <label for="employee_id">Employee ID:</label>
-                                <input type="text" id="employee_id" name="employee_id" required>
-                            </li>
-                            <li>
-                                <label for="branch">Branch:</label>
-                                <input type="text" id="branch" name="branch" required>
-                            </li>
-                            <li>
-                                <label for="location">Location:</label>
-                                <input type="text" id="location" name="location" required>
-                            </li>
-                            <li>
-                                <label for="time_in">Time In:</label>
-                                <input type="time" id="time_in" name="time_in" required readonly>
-                            </li>
-                            <li>
-                                <label for="date">Date:</label>
-                                <input type="date" id="date" name="date" required readonly>
-                            </li>
-                            <li>
-                                <button type="submit">Add Record</button>
-                            </li>
-                        </ul>
-                    </form>
-                </div>
-            </div>
-
-            <div id="attendanceModal" class="modal">
-                <div class="modal-content">
-                    <span class="close" id="closeModalBtn">&times;</span>
-                    <h2>Update Attendance Record</h2>
-                    <form id="attendanceForm" method="POST">
-                        <input type="hidden" id="record_id" name="id">
-                        <ul class="form-container">
-                            <li>
-                                <label for="employee_id">Employee ID:</label>
-                                <input type="text" id="employee_id" name="employee_id" required>
-                            </li>
-                            <li>
-                                <label for="branch">Branch:</label>
-                                <input type="text" id="branch" name="branch" required>
-                            </li>
-                            <li>
-                                <label for="location">Location:</label>
-                                <input type="text" id="location" name="location" required>
-                            </li>
-                            <li>
-                                <label for="time_in">Time In:</label>
-                                <input type="time" id="time_in" name="time_in" required>
-                            </li>
-                            <li>
-                                <label for="date">Date:</label>
-                                <input type="date" id="date" name="date" required>
-                            </li>
-                            <li>
-                                <button type="submit">Save Changes</button>
-                            </li>
-                        </ul>
-                    </form>
-                </div>
-            </div>
-            <section class="content">
-                <!-- Existing Table of Attendance Records -->
+            <button id="createRecordBtn" class="create-btn">Create Record</button>
+            <div class="content">
+                <h2>List of Records</h2>
                 <table>
                     <thead>
                         <tr>
-                            <th>Employee ID</th>
-                            <th>Branch</th>
-                            <th>Location</th>
-                            <th>Time In</th>
-                            <th>Time Out</th>
+                            <th>Record ID</th>
+                            <th>Name</th>
                             <th>Date</th>
+                            <th>Time</th>
+                            <th>Details</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% records.forEach(record => { %>
-                            <tr>
-                                <td><%= record.employee_id %></td>
-                                <td><%= record.branch %></td>
-                                <td><%= record.location %></td>
-                                <td><%= record.time_in %></td>
-                                <td><%= record.time_out %></td>
-                                <td><%= record.date %></td>
-                            </tr>
-                        <% }); %>
+                        <tr>
+                            <td>1</td>
+                            <td>John Doe</td>
+                            <td>2024-10-01</td>
+                            <td>10:00 AM</td>
+                            <td>Sample details</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Jane Smith</td>
+                            <td>2024-10-02</td>
+                            <td>11:00 AM</td>
+                            <td>Sample details</td>
+                        </tr>
                     </tbody>
                 </table>
-            </section>
+            </div>
+
+            <!-- Modal -->
+            <div id="createRecordModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Create New Record</h2>
+                    <form>
+                        <ul class="form-container">
+                            <li>
+                                <label for="recordName">Name:</label>
+                                <input type="text" id="recordName" name="recordName">
+                            </li>
+                            <li>
+                                <label for="recordDate">Date:</label>
+                                <input type="date" id="recordDate" name="recordDate">
+                            </li>
+                            <li>
+                                <label for="recordTime">Time:</label>
+                                <input type="time" id="recordTime" name="recordTime">
+                            </li>
+                            <li>
+                                <label for="recordDetails">Details:</label>
+                                <input type="text" id="recordDetails" name="recordDetails">
+                            </li>
+                            <li>
+                                <button type="submit">Create</button>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+            </div>
         </main>
     </div>
     <script>
-        function setCurrentDateTime() {
-            // Get the current local date and time
-            const currentDate = new Date();
-            // Get the hours and minutes
-            let hours = currentDate.getHours();
-            let minutes = currentDate.getMinutes();
-            // Pad the minutes with leading zero if needed
-            if (minutes < 10) minutes = '0' + minutes;
-            // Format the time as HH:mm
-            let currentTime = `${hours}:${minutes}`;
-            // Format the date to YYYY-MM-DD for the input type="date"
-            const currentDateString = currentDate.toLocaleDateString('en-CA'); // Using 'en-CA' for YYYY-MM-DD format
-            // Set the current time and date in the respective fields
-            document.getElementById('time_in').value = currentTime;
-            document.getElementById('date').value = currentDateString;
-        }
-        // Get modal and button elements
-        const modal = document.getElementById("attendanceModal");
-        const createRecordBtn = document.getElementById("createRecordBtn"); // Correctly use createRecordBtn
-        const closeModalBtn = document.getElementById("closeModalBtn");
-        const updateButtons = document.querySelectorAll(".update-btn");
-        const form = document.getElementById("attendanceForm");
+        // Get the modal
+        var modal = document.getElementById("createRecordModal");
 
-        // Handle Update Button Click
-        updateButtons.forEach(button => {
-        button.addEventListener("click", () => {
-            // Populate modal fields with record data
-            document.getElementById("record_id").value = button.getAttribute("data-id");
-            document.getElementById("employee_id").value = button.getAttribute("data-employee_id");
-            document.getElementById("branch").value = button.getAttribute("data-branch");
-            document.getElementById("location").value = button.getAttribute("data-location");
-            document.getElementById("time_in").value = button.getAttribute("data-time_in");
-            document.getElementById("date").value = button.getAttribute("data-date");
+        // Get the button that opens the modal
+        var btn = document.getElementById("createRecordBtn");
 
-            // Set form action to update URL
-            form.action = `/inout/update/${button.getAttribute("data-id")}`;
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
 
-             // Show modal
-                modal.style.display = "block";
-            });
-        });
-        // When the user clicks the button, open the modal
-        createRecordBtn.onclick = function() { // Use createRecordBtn instead of btn
-            // Get current date and time
-            const currentDate = new Date();
-            const hours = currentDate.getHours();
-            const minutes = currentDate.getMinutes();
-            const currentTime = `${hours}:${minutes < 10 ? '0' + minutes : minutes}`; // HH:mm format
-            const currentDateString = currentDate.toLocaleDateString('en-CA'); // YYYY-MM-DD format
-            // Set the default values for the input fields
-            document.getElementById('time_in').value = currentTime;
-            document.getElementById('date').value = currentDateString;
+        // When the user clicks on the button, open the modal
+        btn.onclick = function() {
             modal.style.display = "block";
         }
-        // When the user clicks on the close button, close the modal
-        closeModalBtn.onclick = function() {
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
             modal.style.display = "none";
         }
+
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function(event) {
             if (event.target == modal) {

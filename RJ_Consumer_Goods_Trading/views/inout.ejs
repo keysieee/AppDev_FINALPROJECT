@@ -5,481 +5,512 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>In/Out</title>
     <style>
-       body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            height: 100vh; /* Full viewport height */
-            display: flex;
-            flex-direction: column; /* Stack header, sidebar, and content vertically */
-            color: black; /* Text color changed to white */
-            background: url('images/background.png') no-repeat center center fixed;
-            background-size: cover;
-        }
-        .header {
-            width: 100%;
-            background-color: transparent; /* New header color */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: white;
-            padding: 10px 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .header .left-icons {
-            display: flex;
-            align-items: center;
-        }
-        .header .left-icons img {
-            height: 60px; /* Adjust logo height */
-            margin-right: 10px; /* Space between logo and text */
-        }
-        .header .left-icons .store-name {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .header .right-icons {
-            display: flex;
-            align-items: center;
-        }
-        .header .right-icons .icon {
-            margin-left: 20px;
-            cursor: pointer;
-            font-size: 1.5em;
-        }
-        .header .search {
-            margin-left: 20px;
-        }
-        .header .search input {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .container {
-            display: flex;
-            flex: 1; /* Allow container to take up remaining space */
-            width: 100%;
-        }
-        .sidebar {
-            width: 15%; /* Sidebar width */
-            background-color: #3e3e3e; /* Dark gray background for sidebar */
-            padding: 20px;
-            color: white; /* Sidebar text color */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow effect */
-            display: flex;
-            flex-direction: column; /* Stack items vertically */
-            align-items: center; /* Center items horizontally */
-        }
-        .sidebar img {
-            width: 150px;
-            height: auto;
-            margin-bottom: 20px;
-        }
-        .sidebar .store-name {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        .sidebar a {
-            display: block; /* Block display for links */
-            padding: 10px;
-            color: white; /* Link color in sidebar */
-            text-decoration: none;
-            margin-bottom: 10px;
-            border: 1px solid #ccc; /* Border for buttons */
-            border-radius: 5px; /* Rounded corners */
-            transition: background 0.3s; /* Smooth background change */
-            width: 100%; /* Make links full width */
-            text-align: center; /* Center align text */
-        }
-        .sidebar a:hover,
-        .sidebar a.active {
-            background-color: #ff4a4a;
-        }
-        .menu-item {
-        display: block;
-        padding: 10px;
-        margin-bottom: 10px;
-        background-color: #8d4444;
-        text-decoration: none;
-        color: white;
-        text-align: center;
-        border-radius: 5px;
-        }
-
-        .menu-item.active {
-        background-color: #ff4a4a;
-        }
-        .logout-button {
-            margin-top: auto;
-            padding: 10px;
-            background-color: darkred; /* Logout button background color */
-            color: white; /* Text color */
-            border: none; /* Remove border */
-            border-radius: 5px; /* Rounded corners */
-            cursor: pointer; /* Pointer cursor on hover */
-            width: 100%; /* Make button full width */
-            text-align: center; /* Center align text */
-            transition: background 0.3s; /* Smooth background change */
-        }
-        .logout-button:hover {
-            background: rgba(255, 0, 0, 0.2); /* Hover background color */
-        }
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            position: relative;
-        }
-        .icons .icon {
-            margin-left: 10px;
-            cursor: pointer;
-        }
-        .content {
-            margin-top: 20px;
-        }
-        .content h2 {
-            font-size: 1.5em;
-            color: #336666;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border: 1px solid #ccc;
-        }
-        th {
-            background-color: #8c8c8c;
-            color: white;
-        }
-        td {
-            background-color: #ddd;
-        }
-        /* Modal Style */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 10px;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        /* Right-side Create Button */
-        .create-btn {
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        .create-btn:hover {
-            background-color: #45a049;
-        }
-
-        /* Input fields styling */
-        input[type="text"],
-        input[type="date"],
-        input[type="time"],
-        select {
-            width: 100%;
-            padding: 8px 15px;
-            margin: 8px 0;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-            background-color: #f9f9f9;
-        }
-
-        input[type="text"]:focus,
-        input[type="date"]:focus,
-        input[type="time"]:focus,
-        select:focus {
-            border-color: #4CAF50;
-            outline: none;
-        }
-
-        label {
-            font-size: 16px;
-            margin-bottom: 8px;
-            color: #333;
-        }
-
-        /* Button inside the modal */
-        button[type="submit"] {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        button[type="submit"]:hover {
-            background-color: #45a049;
-        }
-
-        /* List-style for input fields */
-        .form-container {
-            list-style: none;
-            padding: 0;
-        }
-
-        .form-container li {
-            margin-bottom: 15px;
-        }
-
-        .form-container li:last-child {
-            margin-bottom: 0;
-        }
-
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <img src="images/employee.png" alt="Employee Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
-            <div class="store-name">
-                EMPLOYEE
-            </div>
-            <br>
-            <a href="/tasks" class="menu-item">Tasks</a>
-            <a href="/inout" class="menu-item active">In/Out</a>
-            <a href="/services" class="menu-item">Services</a>
-            <a href="/inventory" class="menu-item">Inventory</a>
-            <a href="/empshop" class="menu-item">Shop</a>
-            <button class="logout-button" onclick="window.location.href='/logout'">Logout</button>
-        </div>
-        <main>
-            <header class="header">
-                <div class="icons">
-                    <a href="/home" class="icon">🏠</a>
-                    <span class="icon">👤</span>
-                </div>
-            </header>
+        body {
+             font-family: Arial, sans-serif;
+             margin: 0;
+             padding: 0;
+             height: 100vh; /* Full viewport height */
+             display: flex;
+             flex-direction: column; /* Stack header, sidebar, and content vertically */
+             color: black; /* Text color changed to white */
+             background: url('images/background.png') no-repeat center center fixed;
+             background-size: cover;
+         }
+         .header {
+             width: 100%;
+             background-color: transparent; /* New header color */
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+             color: white;
+             padding: 10px 20px;
+             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+         }
+         .header .left-icons {
+             display: flex;
+             align-items: center;
+         }
+         .header .left-icons img {
+             height: 60px; /* Adjust logo height */
+             margin-right: 10px; /* Space between logo and text */
+         }
+         .header .left-icons .store-name {
+             font-size: 24px;
+             font-weight: bold;
+         }
+         .header .right-icons {
+             display: flex;
+             align-items: center;
+         }
+         .header .right-icons .icon {
+             margin-left: 20px;
+             cursor: pointer;
+             font-size: 1.5em;
+         }
+         .header .search {
+             margin-left: 20px;
+         }
+         .header .search input {
+             padding: 8px;
+             border: 1px solid #ccc;
+             border-radius: 5px;
+         }
+         .container {
+             display: flex;
+             flex: 1; /* Allow container to take up remaining space */
+             width: 100%;
+         }
+         .sidebar {
+             width: 15%; /* Sidebar width */
+             background-color: #3e3e3e; /* Dark gray background for sidebar */
+             padding: 20px;
+             color: white; /* Sidebar text color */
+             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow effect */
+             display: flex;
+             flex-direction: column; /* Stack items vertically */
+             align-items: center; /* Center items horizontally */
+         }
+         .sidebar img {
+             width: 150px;
+             height: auto;
+             margin-bottom: 20px;
+         }
+         .sidebar .store-name {
+             font-size: 20px;
+             font-weight: bold;
+             margin-bottom: 30px;
+             text-align: center;
+         }
+         .sidebar a {
+             display: block; /* Block display for links */
+             padding: 10px;
+             color: white; /* Link color in sidebar */
+             text-decoration: none;
+             margin-bottom: 10px;
+             border: 1px solid #ccc; /* Border for buttons */
+             border-radius: 5px; /* Rounded corners */
+             transition: background 0.3s; /* Smooth background change */
+             width: 100%; /* Make links full width */
+             text-align: center; /* Center align text */
+         }
+         .sidebar a:hover,
+         .sidebar a.active {
+             background-color: #ff4a4a;
+         }
+         .menu-item {
+         display: block;
+         padding: 10px;
+         margin-bottom: 10px;
+         background-color: #8d4444;
+         text-decoration: none;
+         color: white;
+         text-align: center;
+         border-radius: 5px;
+         }
+ 
+         .menu-item.active {
+         background-color: #ff4a4a;
+         }
+         .logout-button {
+             margin-top: auto;
+             padding: 10px;
+             background-color: darkred; /* Logout button background color */
+             color: white; /* Text color */
+             border: none; /* Remove border */
+             border-radius: 5px; /* Rounded corners */
+             cursor: pointer; /* Pointer cursor on hover */
+             width: 100%; /* Make button full width */
+             text-align: center; /* Center align text */
+             transition: background 0.3s; /* Smooth background change */
+         }
+         .logout-button:hover {
+             background: rgba(255, 0, 0, 0.2); /* Hover background color */
+         }
+         main {
+             flex: 1;
+             display: flex;
+             flex-direction: column;
+             padding: 20px;
+             position: relative;
+         }
+         .icons .icon {
+             margin-left: 10px;
+             cursor: pointer;
+         }
+         .content {
+             margin-top: 20px;
+         }
+         .content h2 {
+             font-size: 1.5em;
+             color: #336666;
+         }
+         table {
+             width: 100%;
+             border-collapse: collapse;
+             margin-top: 10px;
+         }
+         th, td {
+             padding: 15px;
+             text-align: left;
+             border: 1px solid #ccc;
+         }
+         th {
+             background-color: #8c8c8c;
+             color: white;
+         }
+         td {
+             background-color: #ddd;
+         }
+         /* Modal Style */
+         .modal {
+             display: none;
+             position: fixed;
+             z-index: 1;
+             left: 0;
+             top: 0;
+             width: 100%;
+             height: 100%;
+             overflow: auto;
+             background-color: rgba(0,0,0,0.4);
+         }
+ 
+         .modal-content {
+             background-color: #fefefe;
+             margin: 15% auto;
+             padding: 20px;
+             border: 1px solid #888;
+             width: 80%;
+             max-width: 500px;
+             border-radius: 10px;
+         }
+ 
+         .close {
+             color: #aaa;
+             float: right;
+             font-size: 28px;
+             font-weight: bold;
+         }
+ 
+         .close:hover,
+         .close:focus {
+             color: black;
+             text-decoration: none;
+             cursor: pointer;
+         }
+ 
+         /* Right-side Create Button */
+         .create-btn {
+             position: absolute;
+             right: 20px;
+             top: 20px;
+             padding: 10px 20px;
+             background-color: #4CAF50;
+             color: white;
+             border: none;
+             cursor: pointer;
+             border-radius: 5px;
+             font-size: 16px;
+         }
+ 
+         .create-btn:hover {
+             background-color: #45a049;
+         }
+ 
+         /* Input fields styling */
+         input[type="text"],
+         input[type="date"],
+         input[type="time"],
+         select {
+             width: 100%;
+             padding: 8px 15px;
+             margin: 8px 0;
+             box-sizing: border-box;
+             border: 1px solid #ccc;
+             border-radius: 5px;
+             font-size: 14px;
+             background-color: #f9f9f9;
+         }
+ 
+         input[type="text"]:focus,
+         input[type="date"]:focus,
+         input[type="time"]:focus,
+         select:focus {
+             border-color: #4CAF50;
+             outline: none;
+         }
+ 
+         label {
+             font-size: 16px;
+             margin-bottom: 8px;
+             color: #333;
+         }
+ 
+         /* Button inside the modal */
+         button[type="submit"] {
+             background-color: #4CAF50;
+             color: white;
+             padding: 10px 20px;
+             border: none;
+             cursor: pointer;
+             border-radius: 5px;
+             font-size: 16px;
+         }
+ 
+         button[type="submit"]:hover {
+             background-color: #45a049;
+         }
+ 
+         /* List-style for input fields */
+         .form-container {
+             list-style: none;
+             padding: 0;
+         }
+ 
+         .form-container li {
+             margin-bottom: 15px;
+         }
+ 
+         .form-container li:last-child {
+             margin-bottom: 0;
+         }
+ 
+     </style>
+ </head>
+ <body>
+     <div class="container">
+         <!-- Sidebar -->
+         <div class="sidebar">
+             <img src="images/employee.png" alt="Employee Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
+             <div class="store-name">
+                 EMPLOYEE
+             </div>
+             <br>
+             <a href="/tasks" class="menu-item">Tasks</a>
+             <a href="/inout" class="menu-item active">In/Out</a>
+             <a href="/services" class="menu-item">Services</a>
+             <a href="/inventory" class="menu-item">Inventory</a>
+             <a href="/empshop" class="menu-item">Shop</a>
+             <button class="logout-button" onclick="window.location.href='/logout'">Logout</button>
+         </div>
+         <main>
+             <header class="header">
+                 <div class="icons">
+                     <a href="/home" class="icon">🏠</a>
+                     <span class="icon">👤</span>
+                 </div>
+             </header> 
 
             <!-- Button to trigger modal -->
-            <button class="create-btn" id="createRecordBtn">Create Record</button>
+             <!-- Button to trigger modal -->
+             <button class="create-btn" id="createRecordBtn">Create Record</button>
 
-            <!-- Modal with input form -->
-            <div id="attendanceModal" class="modal">
-                <div class="modal-content">
-                    <span class="close" id="closeModalBtn">&times;</span>
-                    <h2>Add Attendance Record</h2>
-                    <form action="/inout/add" method="POST">
-                        <ul class="form-container">
-                            <li>
-                                <label for="employee_id">Employee ID:</label>
-                                <input type="text" id="employee_id" name="employee_id" required>
+             <!-- Modal for Add Attendance -->
+             <div id="attendanceModal" class="modal">
+                 <div class="modal-content">
+                     <span class="close" id="closeModalBtn">&times;</span>
+                     <h2>Add Attendance Record</h2>
+                     <form action="/inout/add" method="POST">
+                         <ul class="form-container">
+                             <li>
+                                 <label for="employee_id">Employee ID:</label>
+                                 <input type="hidden" id="employee_id" name="employee_id" value="<%= employee_id %>" required>
+                             </li>
+                             <li>
+                                 <label for="branch">Branch:</label>
+                                 <input type="text" id="branch" name="branch" required>
+                             </li>
+                             <li>
+                                 <label for="location">Location:</label>
+                                 <input type="text" id="location" name="location" required>
+                             </li>
+                             <li>
+                                 <label for="time_in">Time In:</label>
+                                 <input type="time" id="time_in" name="time_in" required readonly>
+                             </li>
+                             <li>
+                                <label for="time_out">Time Out:</label>
+                                <input type="text" id="time_out" name="time_out" value="null" hidden> <!-- Hidden, not required -->
                             </li>
-                            <li>
-                                <label for="branch">Branch:</label>
-                                <input type="text" id="branch" name="branch" required>
-                            </li>
-                            <li>
-                                <label for="location">Location:</label>
-                                <input type="text" id="location" name="location" required>
-                            </li>
-                            <li>
-                                <label for="time_in">Time In:</label>
-                                <input type="time" id="time_in" name="time_in" required readonly>
-                            </li>
-                            <li>
-                                <label for="date">Date:</label>
-                                <input type="date" id="date" name="date" required readonly>
-                            </li>
-                            <li>
-                                <button type="submit">Add Record</button>
-                            </li>
-                        </ul>
-                    </form>
-                </div>
-            </div>
-
-            <div id="attendanceModal" class="modal">
+                             <li>
+                                 <label for="date">Date:</label>
+                                 <input type="date" id="date" name="date" value="<%= records.date %>" required readonly>
+                             </li>
+                             <li>
+                                 <button type="submit">Add Record</button>
+                             </li>
+                         </ul>
+                     </form>
+                 </div>
+             </div>
+ 
+             <!-- Modal for Update Attendance -->
+              <!-- Modal for Update Attendance -->
+            <div id="updateModal" class="modal">
                 <div class="modal-content">
                     <span class="close" id="closeModalBtn">&times;</span>
                     <h2>Update Attendance Record</h2>
-                    <form id="attendanceForm" method="POST">
+                    <form id="attendanceForm" action="/update-attendance" method="POST">
                         <input type="hidden" id="record_id" name="id">
-                        <ul class="form-container">
-                            <li>
-                                <label for="employee_id">Employee ID:</label>
-                                <input type="text" id="employee_id" name="employee_id" required>
-                            </li>
-                            <li>
-                                <label for="branch">Branch:</label>
-                                <input type="text" id="branch" name="branch" required>
-                            </li>
-                            <li>
-                                <label for="location">Location:</label>
-                                <input type="text" id="location" name="location" required>
-                            </li>
-                            <li>
-                                <label for="time_in">Time In:</label>
-                                <input type="time" id="time_in" name="time_in" required>
-                            </li>
-                            <li>
-                                <label for="date">Date:</label>
-                                <input type="date" id="date" name="date" required>
-                            </li>
-                            <li>
-                                <button type="submit">Save Changes</button>
-                            </li>
-                        </ul>
-                    </form>
+                        <input type="hidden" id="time_out" name="time_out">
+                        <button type="submit">Time Out Now</button>
+                    </form>                    
                 </div>
             </div>
+
             <section class="content">
-                <!-- Existing Table of Attendance Records -->
                 <table>
                     <thead>
                         <tr>
-                            <th>Employee ID</th>
                             <th>Branch</th>
                             <th>Location</th>
                             <th>Time In</th>
                             <th>Time Out</th>
                             <th>Date</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% records.forEach(record => { %>
+                        <% records.forEach(function(record) { %>
                             <tr>
-                                <td><%= record.employee_id %></td>
                                 <td><%= record.branch %></td>
                                 <td><%= record.location %></td>
-                                <td><%= record.time_in %></td>
-                                <td><%= record.time_out %></td>
-                                <td><%= record.date %></td>
+                                <td><%= record.time_in || 'No Time In' %></td>
+                                <td><%= record.time_out || 'Not yet clocked out' %></td>
+                                <td><%= record.date || 'No Date' %></td>
+                                <td>
+                                    <button 
+                                        class="update-btn" 
+                                        data-id="<%= record.id %>" 
+                                        data-branch="<%= record.branch %>" 
+                                        data-location="<%= record.location %>" 
+                                        data-time_in="<%= record.time_in %>" 
+                                        data-time_out="<%= record.time_out %>" 
+                                        data-date="<%= record.date %>">
+                                        Update
+                                    </button>
+                                </td>
                             </tr>
-                        <% }); %>
-                    </tbody>
-                </table>                
+                        <% }) %>
+                    </tbody>                                          
+                </table>                          
             </section>
         </main>
     </div>
     
     <script>
-        function setCurrentDateTime() {
-            // Get the current local date and time
-            const currentDate = new Date();
+        document.getElementById('createRecordBtn').addEventListener('click', () => {
+            const now = new Date();
+            const formattedDate = now.toISOString().split('T')[0];
+            const formattedTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
         
-            // Get the hours and minutes
-            let hours = currentDate.getHours();
-            let minutes = currentDate.getMinutes();
+            document.getElementById('date').value = formattedDate;
+            document.getElementById('time_in').value = formattedTime;
         
-            // Pad the minutes with leading zero if needed
-            if (minutes < 10) minutes = '0' + minutes;
+            // Show the modal
+            document.getElementById('attendanceModal').style.display = 'block';
+        });            
         
-            // Format the time as HH:mm
-            let currentTime = `${hours}:${minutes}`;
-        
-            // Format the date to YYYY-MM-DD for the input type="date"
-            const currentDateString = currentDate.toLocaleDateString('en-CA'); // Using 'en-CA' for YYYY-MM-DD format
-        
-            // Set the current time and date in the respective fields
-            document.getElementById('time_in').value = currentTime;
-            document.getElementById('date').value = currentDateString;
-        }
-        
-        // Get modal and button elements
-        const modal = document.getElementById("attendanceModal");
-        const createRecordBtn = document.getElementById("createRecordBtn"); // Correctly use createRecordBtn
-        const closeModalBtn = document.getElementById("closeModalBtn");
-        const updateButtons = document.querySelectorAll(".update-btn");
-        const form = document.getElementById("attendanceForm");
-
-        // Handle Update Button Click
-        updateButtons.forEach(button => {
-        button.addEventListener("click", () => {
-            // Populate modal fields with record data
-            document.getElementById("record_id").value = button.getAttribute("data-id");
-            document.getElementById("employee_id").value = button.getAttribute("data-employee_id");
-            document.getElementById("branch").value = button.getAttribute("data-branch");
-            document.getElementById("location").value = button.getAttribute("data-location");
-            document.getElementById("time_in").value = button.getAttribute("data-time_in");
-            document.getElementById("date").value = button.getAttribute("data-date");
-
-            // Set form action to update URL
-            form.action = `/inout/update/${button.getAttribute("data-id")}`;
-
-             // Show modal
-             modal.style.display = "block";
-            });
-        });
-    
-        
-        // When the user clicks the button, open the modal
-        createRecordBtn.onclick = function() { // Use createRecordBtn instead of btn
-            // Get current date and time
-            const currentDate = new Date();
-            const hours = currentDate.getHours();
-            const minutes = currentDate.getMinutes();
-            const currentTime = `${hours}:${minutes < 10 ? '0' + minutes : minutes}`; // HH:mm format
-            const currentDateString = currentDate.toLocaleDateString('en-CA'); // YYYY-MM-DD format
-        
-            // Set the default values for the input fields
-            document.getElementById('time_in').value = currentTime;
-            document.getElementById('date').value = currentDateString;
-        
-            modal.style.display = "block";
-        }
-        
-        // When the user clicks on the close button, close the modal
-        closeModalBtn.onclick = function() {
-            modal.style.display = "none";
-        }
-        
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    
-    </script>    
+            // If updating, set the current time for 'Time Out'
+            if (!timeOutField.value) {
+                const timeOutNow = new Date();
+                const timeOutHours = timeOutNow.getHours();
+                const timeOutMinutes = timeOutNow.getMinutes();
+                timeOutField.value = `${timeOutHours}:${timeOutMinutes < 10 ? '0' + timeOutMinutes : timeOutMinutes}`;
+            };
+            document.addEventListener('DOMContentLoaded', () => {
+                const createModal = document.getElementById('attendanceModal');
+                const updateModal = document.getElementById('updateModal');
+                const closeModalBtns = document.querySelectorAll('.close');
+                const createRecordBtn = document.getElementById('createRecordBtn');
+                const updateButtons = document.querySelectorAll('.update-btn');
+                const updateForm = document.getElementById('attendanceForm');
+            
+                // Open the create modal
+                createRecordBtn.addEventListener('click', () => {
+                    const now = new Date();
+                    const formattedDate = now.toISOString().split('T')[0];
+                    const formattedTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                    
+                    document.getElementById('date').value = formattedDate;
+                    document.getElementById('time_in').value = formattedTime;
+                    
+                    createModal.style.display = 'block';
+                });
+            
+                // Open the update modal and set form values
+                function openUpdateModal(record) {
+                    updateModal.style.display = 'block';
+            
+                    // Set form values
+                    document.getElementById('record_id').value = record.id;
+                    document.getElementById('employee_id').value = record.employee_id;
+                    document.getElementById('branch').value = record.branch;
+                    document.getElementById('location').value = record.location;
+                    document.getElementById('time_in').value = record.time_in;
+                    document.getElementById('time_out').value = record.time_out || '';  // Pre-fill time_out value
+                    document.getElementById('date').value = record.date;
+                }
+            
+                // Handle update button click to open modal
+                updateButtons.forEach(button => {
+                    button.addEventListener('click', function () {
+                        const record = {
+                            id: this.dataset.id,
+                            employee_id: this.dataset.employee_id,
+                            branch: this.dataset.branch,
+                            location: this.dataset.location,
+                            time_in: this.dataset.time_in,
+                            time_out: this.dataset.time_out,
+                            date: this.dataset.date
+                        };
+            
+                        openUpdateModal(record);
+                    });
+                });
+            
+                // Handle close button clicks
+                closeModalBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        updateModal.style.display = 'none';
+                        createModal.style.display = 'none';
+                    });
+                });
+            
+                // Handle form submit (for update attendance)
+                updateForm.onsubmit = (event) => {
+                    event.preventDefault(); // Prevent form submission to handle via AJAX if needed
+            
+                    // Get the current time for the 'time_out' field if empty
+                    const timeOutField = document.getElementById('time_out');
+                    if (!timeOutField.value) {
+                        const timeOutNow = new Date();
+                        const timeOutHours = timeOutNow.getHours();
+                        const timeOutMinutes = timeOutNow.getMinutes();
+                        timeOutField.value = `${timeOutHours}:${timeOutMinutes < 10 ? '0' + timeOutMinutes : timeOutMinutes}`;
+                    }
+            
+                    // Update the attendance record via AJAX (you can replace this part with actual AJAX logic)
+                    const formData = new FormData(updateForm);
+                    fetch('/update-attendance', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("Attendance updated successfully!");
+                            updateModal.style.display = 'none'; // Close the modal on success
+                            // Optionally, reload the page or update the table
+                            location.reload(); // For page reload
+                        } else {
+                            alert("Failed to update attendance. Please try again.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error updating attendance:", error);
+                    });
+                };
+            });                     
+    </script>
 </body>
 </html>

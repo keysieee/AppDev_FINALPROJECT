@@ -7,4 +7,4 @@ const pool = mysql.createPool({
     database: 'rj_cgt' // Your database name
 });
 
-module.exports = pool; // Exporting the pool directly
+module.exports = pool;

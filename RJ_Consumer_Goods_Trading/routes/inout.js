@@ -1,23 +1,14 @@
-// routes/inout.js
 const express = require('express');
 const router = express.Router();
 const inoutController = require('../controller/inoutController');
 const ensureAuthenticated = require('../middlewares/authMiddleware');
 
-// Debugging line: Log the controller function
-console.log(inoutController.getEmployeeAttendance); // It should log as a function
-router.get('/', inoutController.getEmployeeAttendance);
-
-// Route to show update attendance form
-router.get('/update/:id', inoutController.showUpdateAttendance);
-
-// Route to update attendance record
-router.post('/update/:id', inoutController.updateAttendance);
+// Routes for in/out functionality
+router.get('/inout', ensureAuthenticated, inoutController.getEmployeeAttendance);
+router.post('/inout/add', ensureAuthenticated, inoutController.addAttendanceRecord);
+router.patch('/inout/update/:id', ensureAuthenticated, inoutController.updateAttendance);
 
 module.exports = router;
-
-
-
 // Update attendance - Show form
 exports.showUpdateAttendance = async (req, res) => {
     const { id } = req.params;

@@ -1,6 +1,9 @@
 const ensureAuthenticated = (req, res, next) => {
     if (req.session && req.session.employee_id) {
-        return next();
+        next();
+    } else {
+        res.redirect('/login'); // Or any fallback
     }
-    res.redirect('/login'); // Redirect if not authenticated
 };
+
+module.exports = ensureAuthenticated;

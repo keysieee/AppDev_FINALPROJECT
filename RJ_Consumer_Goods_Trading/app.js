@@ -6,6 +6,7 @@ const db = require('./config/db');
 const servicesRoutes = require('./routes/services');
 const tasksRoutes = require('./routes/tasks');
 const inoutRoutes = require('./routes/inout');
+const inventoryRoutes = require('./routes/inventory');
 
 const app = express();
 
@@ -56,43 +57,97 @@ app.get('/', (req, res) => {
 
 // Home route with login check
 app.get('/home', (req, res) => {
-    if (!req.session.user) {
+    if (!req.session.employee) {
         return res.redirect('/login');
     }
     res.render('home');
 });
 
-// InOut route with login check and data retrieval
+// Endpoint to fetch attendance records for the logged-in employee
 app.get('/inout', async (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/login');
+    const loggedInEmployeeId = req.session.employee ? req.session.employee.employee_id : null;
+    const employee_id = req.session.employee?.employee_id; // Ensure `employee_id` is stored in the session object
+
+    if (!employee_id) {
+        // Redirect to login if the session is not set
+        return res.status(401).send('Unauthorized: Please log in first');
     }
 
     try {
-        // Fetch attendance records from the database
-        const [records] = await db.query('SELECT * FROM attendance');
-        
-        // Render the inout view with attendance data
-        res.render('inout', { records });
+        // Fetch attendance records for the logged-in employee
+        const [records] = await db.query(
+            'SELECT id, branch, location, TIME_FORMAT(time_in, "%H:%i") AS time_in, TIME_FORMAT(time_out, "%H:%i") AS time_out, DATE_FORMAT(date, "%Y-%m-%d") AS date FROM attendance WHERE employee_id = ?',
+            [employee_id]
+        );        
+
+        res.render('inout', {
+            employee_id,
+            records,
+            loggedInEmployeeId
+        });
     } catch (err) {
-        console.error("Error fetching attendance records:", err);
-        res.status(500).send("Server error");
+        console.error('Error fetching attendance records:', err);
+        res.status(500).send('Error fetching attendance records');
     }
 });
 
+
+// Route to handle updating attendance records
+//naalis
+
 // Route to handle adding attendance records
 app.post('/inout/add', async (req, res) => {
-    const { employee_id, branch, location, time_in, time_out, date } = req.body;
+    const { branch, location, time_in, date } = req.body;
+    const employee_id = req.session.employee?.employee_id;
+
+    if (!employee_id) {
+        return res.status(401).send('Unauthorized: Please log in first');
+    }
 
     try {
+        // Convert the date to the local time before saving
+        const localDate = new Date(date);
+        localDate.setHours(localDate.getHours() + 8); // Adjust for your time zone (China Standard Time)
+        
         await db.query(
-            'INSERT INTO attendance (employee_id, branch, location, time_in, time_out, date) VALUES (?, ?, ?, ?, ?, ?)',
-            [employee_id, branch, location, time_in, time_out, date]
-        );
-        res.redirect('/inout'); // Redirect to the inout page after adding
+            'INSERT INTO attendance (employee_id, branch, location, time_in, time_out, date) VALUES (?, ?, ?, ?, NULL, NOW())',
+            [employee_id, branch, location, time_in]
+        );        
+        res.redirect('/inout');
     } catch (err) {
-        console.error("Error adding attendance record:", err);
-        res.status(500).send("Server error");
+        console.error('Error adding attendance record:', err);
+        res.status(500).send('Server error');
+    }
+});
+
+app.post('/update-attendance', async (req, res) => {
+    const { id } = req.body;
+    const localTimeOut = new Date();
+
+    console.log('Update request received:', { id, localTimeOut });
+
+    if (!id) {
+        console.error('ID not provided.');
+        return res.status(400).send('ID is required.');
+    }
+
+    try {
+        const [result] = await db.query(
+            'UPDATE attendance SET time_out = ?, updated_at = NOW() WHERE id = ?',
+            [localTimeOut, id]
+        );
+
+        console.log('SQL query result:', result);
+
+        if (result.affectedRows === 0) {
+            console.error('No record found for ID:', id);
+            return res.status(404).send('Attendance record not found.');
+        }
+
+        res.redirect('/inout');
+    } catch (err) {
+        console.error('Error updating attendance:', err);
+        res.status(500).send('Server error.');
     }
 });
 
@@ -103,7 +158,7 @@ app.get('/admin/inventory', isAdmin, (req, res) => {
 
 // EmpShop route with login check
 app.get('/empshop', (req, res) => {
-    if (!req.session.user) {
+    if (!req.session.employee) {
         return res.redirect('/login');
     }
     res.render('empshop');
@@ -127,33 +182,35 @@ app.get('/login', (req, res) => {
     res.render('login');
 });
 
+
+
 app.post('/login', async (req, res) => {
-    const { id_no, password } = req.body;
+    const { employee_id, password } = req.body;
 
     try {
         // Fetch user by ID
-        const [rows] = await db.query('SELECT * FROM users WHERE id_no = ?', [id_no]);
+        const [rows] = await db.query('SELECT * FROM employee WHERE employee_id = ?', [employee_id]);
 
         if (rows.length > 0) {
-            const user = rows[0];
-            const match = await bcrypt.compare(password, user.password);
+            const employee = rows[0];
+            const match = await bcrypt.compare(password, employee.password);
 
             if (match) {
                 req.session.loggedin = true;
-                req.session.user = user;
-                req.session.role = user.role; // Set the role from the database
+                req.session.employee = employee;
+                req.session.role = employee.role; // Set the role from the database
 
                 // Redirect based on role
-                if (user.role === 'admin') {
+                if (employee.role === 'admin') {
                     return res.redirect('/admin'); // Redirect to admin dashboard
-                } else if (user.role === 'employee') {
+                } else if (employee.role === 'employee') {
                     return res.redirect('/home'); // Redirect to employee home page
                 }
             } else {
                 return res.status(400).send('Incorrect password!');
             }
         } else {
-            return res.status(404).send('User not found!');
+            return res.status(404).send('Employee not found!');
         }
     } catch (error) {
         console.error('Error during login:', error);
@@ -168,14 +225,14 @@ app.get('/signup', (req, res) => {
 
 // Signup form submission handling
 app.post('/signup', async (req, res) => {
-    const { id_no, name, password, confirm_password } = req.body;
+    const { employee_id, name, password, confirm_password } = req.body;
 
     if (password !== confirm_password) {
         return res.redirect('/signup');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    await db.query('INSERT INTO users (id_no, name, password) VALUES (?, ?, ?)', [id_no, name, hashedPassword]);
+    await db.query('INSERT INTO employee (employee_id, name, password) VALUES (?, ?, ?)', [employee_id, name, hashedPassword]);
 
     res.redirect('/login');
 });
@@ -192,7 +249,7 @@ app.get('/logout', (req, res) => {
 
 // Services route with login check and data retrieval
 app.get('/services', async (req, res) => {
-    if (!req.session.user) {
+    if (!req.session.employee) {
         return res.redirect('/login');
     }
 

@@ -1,50 +1,68 @@
-// controller/inoutController.js
-const db = require('../config/db');  // Correct path to your db config file
+const db = require('../config/db');
 
-// Function to get employee attendance
+// Get attendance records for logged-in employee
 const getEmployeeAttendance = async (req, res) => {
     try {
-        const employeeId = req.session.employee_id; // Assuming session stores employee ID
-        const [records] = await db.query('SELECT * FROM attendance WHERE employee_id = ?', [employeeId]);
-        res.render('inout', { records });
+        const employeeId = req.session.employee_id;
+        if (!employeeId) return res.redirect('/login');
+
+        const [attendanceRecords] = await db.query(
+            'SELECT * FROM attendance WHERE employee_id = ?',
+            [employeeId]
+        );
+
+        res.render('inout', { records: attendanceRecords });
     } catch (err) {
-        console.error(err);
+        console.error('Error fetching attendance records:', err);
         res.status(500).send('Server error');
     }
 };
 
-// Show update attendance form
-const showUpdateAttendance = async (req, res) => {
-    const { id } = req.params;
+// Add attendance record (Time-In)
+const addAttendanceRecord = async (req, res) => {
     try {
-        const [attendanceRecord] = await db.query('SELECT * FROM attendance WHERE id = ?', [id]);
-        if (!attendanceRecord) {
-            console.log('Attendance Records:', records);
-            return res.status(404).send("Record not found");
-        }
-        res.render('updateAttendance', { record: attendanceRecord });
+        const employeeId = req.session.employee_id;
+        if (!employeeId) return res.redirect('/login');
+
+        const { branch, location } = req.body;
+        const time_in = new Date().toISOString().slice(11, 19); // Auto-generate time_in
+        const date = new Date().toISOString().slice(0, 10); // Auto-generate today's date
+
+        const sql =
+            'INSERT INTO attendance (employee_id, branch, location, time_in, date) VALUES (?, ?, ?, ?, ?)';
+        await db.query(sql, [employeeId, branch, location, time_in, date]);
+
+        res.redirect('/inout');
     } catch (err) {
-        console.error("Error fetching attendance record:", err);
-        res.status(500).send("Server error");
+        console.error('Error adding attendance record:', err);
+        res.status(500).send('Server error');
     }
 };
 
-// Update attendance record
+// Update attendance (Time-Out)
 const updateAttendance = async (req, res) => {
-    const { id } = req.params;
-    const { time_in, time_out, branch, location } = req.body;
-    const sql = 'UPDATE attendance SET time_in = ?, time_out = ?, branch = ?, location = ? WHERE id = ?';
     try {
-        await db.query(sql, [time_in, time_out, branch, location, id]);
+        const employeeId = req.session.employee_id;
+        const { id } = req.params;
+        const { time_out } = req.body;
+
+        const [record] = await db.query(
+            'SELECT * FROM attendance WHERE id = ? AND employee_id = ?',
+            [id, employeeId]
+        );
+
+        if (record.length === 0) return res.status(403).send('Unauthorized access.');
+
+        await db.query('UPDATE attendance SET time_out = ? WHERE id = ?', [time_out, id]);
         res.redirect('/inout');
     } catch (err) {
-        console.error("Error updating attendance record:", err);
-        res.status(500).send("Server error");
+        console.error('Error updating attendance record:', err);
+        res.status(500).send('Server error');
     }
 };
 
 module.exports = {
     getEmployeeAttendance,
-    showUpdateAttendance,
-    updateAttendance
+    addAttendanceRecord,
+    updateAttendance,
 };

@@ -11,8 +11,9 @@
             padding: 0;
             height: 100vh; /* Full viewport height */
             display: flex;
-            color: black;
-            background: url('images/background.png');
+            color: white; /* Text color changed to white */
+            background: url('images/background.png') no-repeat center center fixed;
+            background-size: cover;
         }
         .container {
             display: flex;
@@ -20,14 +21,27 @@
             height: 100%;
         }
         .sidebar {
-            width: 15%; /* Sidebar takes 1/4 of the viewport */
-            background: #3e3e3e; /* Dark gray background for sidebar */
+            width: 15%; /* Sidebar width */
+            background-color: #3e3e3e; /* Dark gray background for sidebar */
             padding: 20px;
-            color: black; /* Sidebar text color */
+            color: white; /* Sidebar text color */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow effect */
             display: flex;
             flex-direction: column; /* Stack items vertically */
+            align-items: center; /* Center items horizontally */
         }
+        .sidebar img {
+            width: 100px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .sidebar .store-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
         .sidebar a {
             display: block; /* Block display for links */
             padding: 10px;
@@ -37,9 +51,41 @@
             border: 1px solid #ccc; /* Border for buttons */
             border-radius: 5px; /* Rounded corners */
             transition: background 0.3s; /* Smooth background change */
+            width: 100%; /* Make links full width */
+            text-align: center; /* Center align text */
         }
-        .sidebar a:hover {
-            background: rgba(255, 0, 0, 0.2); /* Highlight on hover */
+        .sidebar a:hover 
+        .sidebar a.active {
+            background-color: #ff4a4a;
+        }
+        .menu-item {
+        display: block;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #8d4444;
+        text-decoration: none;
+        color: white;
+        text-align: center;
+        border-radius: 5px;
+        }
+
+        .menu-item.active {
+        background-color: #ff4a4a;
+        }
+        .logout-button {
+            background-color: darkred; /* Red background for logout button */
+            color: white; /* Text color */
+            padding: 10px; /* Padding for button */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            width: 100%; /* Make button full width */
+            text-align: center; /* Center align text */
+            margin-top: 10px; /* Space above the button */
+            transition: background 0.3s; /* Smooth background change */
+        }
+        .logout-button:hover {
+            background: rgba(255, 0, 0, 0.2); /* Slight transparency on hover */
         }
         .main-content {
             flex-grow: 1; /* Allow main content to grow */
@@ -60,18 +106,16 @@
             font-size: 24px;
             font-weight: bold;
             color: white; /* Store name color */
-            display: flex; /* Use flexbox to align items */
-            align-items: center; /* Center items vertically */
-            white-space: nowrap; /* Prevent line breaks */
+            text-align: center; /* Center align text */
         }
-        .store-name img {
-            height: 40px; /* Set logo height */
-            margin-right: 10px; /* Space between logo and text */
+        .store-logo {
+            height: 60px; /* Adjust logo height */
+            margin-bottom: 10px; /* Space between logo and text */
         }
         .content {
             flex-grow: 1; /* Allow content area to grow */
             padding: 20px;
-            color: black; /* Content text color */
+            color: white; /* Content text color */
             box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
             border-radius: 5px; /* Rounded corners */
             margin-top: 20px; /* Space between header and content */
@@ -89,18 +133,6 @@
             justify-content: flex-start; /* Align items to the left */
             position: relative; /* Position relative to the content */
         }
-        .logout-button {
-            background-color: darkred; /* Red background for logout button */
-            color: white; /* Text color */
-            padding: 10px; /* Padding for button */
-            border: none; /* Remove border */
-            border-radius: 5px; /* Rounded corners */
-            cursor: pointer; /* Pointer cursor on hover */
-            margin-top: 10px; /* Space above the button */
-        }
-        .logout-button:hover {
-            opacity: 0.8; /* Slight transparency on hover */
-        }
         .content img {
             max-width: 100%; /* Make image responsive */
             height: auto; /* Maintain aspect ratio */
@@ -110,12 +142,13 @@
 </head>
 <body>
     <div class="container">
+        <!-- Sidebar -->
         <div class="sidebar">
+            <img src="images/admin.png" alt="R&J Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
             <div class="store-name">
-                <img src="images/logo.png" alt="R&J Logo"> <!-- Replace with the actual path to your logo -->
-                R&J Consumer Goods Trading
-            </div>
-            <br>
+                ADMIN
+            </div
+            <br> <br>
             <a href="/tasks">Tasks</a>
             <a href="/inout">In/Out</a>
             <a href="/services">Services</a>
@@ -123,13 +156,37 @@
             <a href="/empshop">Shop</a>
             <button class="logout-button" onclick="window.location.href='/logout'">Logout</button>
         </div>
+        <!-- Main Content -->
         <div class="main-content">
             <header>
-                <h1>Welcome Home</h1> <!-- You can customize this heading -->
+                <img src="images/home.png" alt="Home Image"> <!-- Replace with the path to your image -->
             </header>
             <div class="content">
-                <h2><img src="images/home.png" alt="Home Image"> </h2>
-             <!-- Replace with the path to your image -->
+                <h2>Welcome to RJ Consumer Goods Trading Employee Management System</h2>
+                <p>
+                    At RJ Consumer Goods Trading, we value our employees 
+                </p>
+                    as the cornerstone of our success.
+                <p>
+                    Our Employee Management System is designed to create a seamless 
+                </p>
+                    and efficient work environment for our team, fostering growth,
+                <p>
+                    collaboration, and innovation. Whether you're tracking your work hours,
+                </p>
+                    managing tasks, or connecting with colleagues, our system is here 
+                <p>
+                    to support you every step of the way.
+                </p>
+                <p>
+                    Explore a user-friendly interface tailored to meet your professional needs 
+                </p>
+                    and enhance your work experience. Join us in building a 
+                <p>
+                    dynamic and productive workplace where your contributions are 
+                </p>
+                    recognized and your career flourishes.
+            </p>
             </div>
         </div>
     </div>

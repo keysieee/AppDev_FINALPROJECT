@@ -5,24 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Services</title>
     <style>
-        body {
+         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            height: 100vh;
+            height: 100vh; /* Full viewport height */
             display: flex;
-            color: black;
+            flex-direction: column; /* Stack header, sidebar, and content vertically */
+            color: black; /* Text color changed to white */
             background: url('images/background.png') no-repeat center center fixed;
             background-size: cover;
         }
-        /* Main container */
+        .header {
+            width: 100%;
+            background-color: transparent; /* New header color */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header .left-icons {
+            display: flex;
+            align-items: center;
+        }
+        .header .left-icons img {
+            height: 60px; /* Adjust logo height */
+            margin-right: 10px; /* Space between logo and text */
+        }
+        .header .left-icons .store-name {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .header .right-icons {
+            display: flex;
+            align-items: center;
+        }
+        .header .right-icons .icon {
+            margin-left: 20px;
+            cursor: pointer;
+            font-size: 1.5em;
+        }
+        .header .search {
+            margin-left: 20px;
+        }
+        .header .search input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
         .container {
             display: flex;
+            flex: 1; /* Allow container to take up remaining space */
             width: 100%;
-            height: 100%;
         }
-
-        /* Sidebar styling */
         .sidebar {
             width: 15%; /* Sidebar width */
             background-color: #3e3e3e; /* Dark gray background for sidebar */
@@ -34,7 +71,7 @@
             align-items: center; /* Center items horizontally */
         }
         .sidebar img {
-            width: 100px;
+            width: 150px;
             height: auto;
             margin-bottom: 20px;
         }
@@ -45,36 +82,49 @@
             text-align: center;
         }
         .sidebar a {
-            display: block;
+            display: block; /* Block display for links */
             padding: 10px;
-            color: white;
+            color: white; /* Link color in sidebar */
             text-decoration: none;
             margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            transition: background 0.3s;
-            width: 100%;
-            text-align: center;
+            border: 1px solid #ccc; /* Border for buttons */
+            border-radius: 5px; /* Rounded corners */
+            transition: background 0.3s; /* Smooth background change */
+            width: 100%; /* Make links full width */
+            text-align: center; /* Center align text */
         }
         .sidebar a:hover,
         .sidebar a.active {
-            background-color: #575757; /* Updated color */
+            background-color: #ff4a4a;
+        }
+        .menu-item {
+        display: block;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #8d4444;
+        text-decoration: none;
+        color: white;
+        text-align: center;
+        border-radius: 5px;
         }
 
+        .menu-item.active {
+        background-color: #ff4a4a;
+        }
         .logout-button {
-            background-color: darkred;
-            color: white;
+            margin-top: auto;
             padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            text-align: center;
-            margin-top: 10px;
-            transition: background 0.3s;
+            background-color: darkred; /* Logout button background color */
+            color: white; /* Text color */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            width: 100%; /* Make button full width */
+            text-align: center; /* Center align text */
+            transition: background 0.3s; /* Smooth background change */
         }
         .logout-button:hover {
-            background: rgba(255, 0, 0, 0.2);
+            background: rgba(255, 0, 0, 0.2); /* Hover background color */
         }
 
         /* Main content styling */
@@ -83,18 +133,6 @@
             display: flex;
             flex-direction: column;
             padding: 20px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .search {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
         }
 
         .icons .icon {
@@ -224,12 +262,28 @@
     </style>
 </head>
 <body>
+    <!-- Header -->
+    <header class="header">
+        <div class="left-icons">
+            <img src="images/logo.png" alt="R&J Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
+            <div class="store-name">
+                RJ CONSUMER GOODS TRADING
+            </div>
+        </div>
+        <div class="right-icons">
+            <a href="/home" class="icon">🏠</a>
+            <span class="icon">👤</span>
+            <div class="search">
+                <input type="text" placeholder="Search tasks...">
+            </div>
+        </div>
+    </header>
     <div class="container">
         <!-- Sidebar -->
         <div class="sidebar">
-            <img src="images/logo.png" alt="R&J Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
+            <img src="images/employee.png" alt="Employee Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
             <div class="store-name">
-                R&J Consumer Goods Trading
+                EMPLOYEE
             </div>
             <br>
             <a href="/tasks" class="menu-item">Tasks</a>
@@ -240,15 +294,6 @@
             <button class="logout-button" onclick="window.location.href='/logout'">Logout</button>
         </div>
 <main>
-    <header class="header">
-
-        <div class="icons">
-            <a href="/home" class="icon">🏠</a>
-            <span class="icon">👤</span>
-        </div>
-        <input type="text" placeholder="Search" class="search">
-    </header>
-
     <section class="content">
         <!-- Tabs -->
         <div class="tab-container">
@@ -335,7 +380,7 @@
             <input type="text" name="item" placeholder="Item" required>
             <input type="number" name="quantity" placeholder="Quantity" required>
             <input type="text" name="reason" placeholder="Reason" required>
-            <input type="number" step="0.01" name="price" placeholder="Price" required>
+            <input type="number" step="1" name="price" placeholder="Price" required>
             <button type="submit">Submit</button>
             <button type="button" onclick="closeModal()" class="back-button">Back</button>
         </form>
@@ -352,10 +397,10 @@
 
             <input type="text" name="item" placeholder="Item" required>
             <!-- Price Input -->
-            <input type="number" name="price" id="price" placeholder="Price" step="0.01" required>
+            <input type="number" name="price" id="price" placeholder="Price" step="1" required>
 
             <!-- Discount Input -->
-            <input type="number" name="discount" id="discount" placeholder="Discount (%)" step="0.01" required>
+            <input type="number" name="discount" id="discount" placeholder="Discount (%)" step="1" required>
 
             <!-- Calculated Price After Discount -->
             <input
@@ -363,7 +408,7 @@
                 name="price_after_discount"
                 id="price_after_discount"
                 placeholder="Price After Discount"
-                step="0.01"
+                step="1"
                 readonly
             >
 
@@ -373,7 +418,7 @@
     </div>
 </div>
 
- <!-- Modal for Update Return/Refund -->
+
 <!-- Modal for Update Return/Refund -->
 <div id="editReturnModal" class="modal">
     <div class="modal-content">

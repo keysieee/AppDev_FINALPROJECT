@@ -54,8 +54,23 @@
             width: 100%; /* Make links full width */
             text-align: center; /* Center align text */
         }
-        .sidebar a:hover {
-            background: rgba(255, 0, 0, 0.2); /* Highlight on hover */
+        .sidebar a:hover 
+        .sidebar a.active {
+            background-color: #ff4a4a;
+        }
+        .menu-item {
+        display: block;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #8d4444;
+        text-decoration: none;
+        color: white;
+        text-align: center;
+        border-radius: 5px;
+        }
+
+        .menu-item.active {
+        background-color: #ff4a4a;
         }
         .logout-button {
             background-color: darkred; /* Red background for logout button */
@@ -129,9 +144,9 @@
     <div class="container">
         <!-- Sidebar -->
         <div class="sidebar">
-            <img src="images/logo.png" alt="R&J Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
+            <img src="images/admin.png" alt="R&J Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
             <div class="store-name">
-                R&J Consumer Goods Trading
+                ADMIN
             </div
             <br> <br>
             <a href="/tasks">Tasks</a>

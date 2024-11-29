@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, Admin</h1>
+    <div>
+        <h2>Task Overview</h2>
+        <p>Total Tasks: <%= taskMetrics.total %></p>
+        <p>Pending Tasks: <%= taskMetrics.pending %></p>
+        <p>Completed Tasks: <%= taskMetrics.completed %></p>
+    </div>
+    <div>
+        <h2>Employee Activity</h2>
+        <p>Total Employees: <%= employeeCount %></p>
+        <p>Currently Clocked In: <%= clockedInCount %></p>
+    </div>
+</body>
+</html>

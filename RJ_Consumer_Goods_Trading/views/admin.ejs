@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
+    <title>Admin Homepage</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -141,21 +141,25 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <img src="images/admin.png" alt="R&J Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
-            <div class="store-name">
-                ADMIN
-            </div
-            <br> <br>
+    <div class="sidebar">
+        <img src="images/admin.png" alt="R&J Logo" class="store-logo">
+        <div class="store-name">
+            <%= role === 'admin' ? 'ADMIN' : 'EMPLOYEE' %>
+        </div>
+        <% if (role === 'admin') { %>
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/tasks">Tasks</a>
+            <a href="/admin/inout">In/Out</a>
+            <a href="/admin/services">Services</a>
+            <a href="/admin/inventory">Inventory</a>
+            <a href="/admin/shop">Shop</a>
+        <% } else { %>
             <a href="/tasks">Tasks</a>
             <a href="/inout">In/Out</a>
             <a href="/services">Services</a>
-            <a href="/inventory">Inventory</a>
-            <a href="/empshop">Shop</a>
-            <button class="logout-button" onclick="window.location.href='/logout'">Logout</button>
-        </div>
+            <a href="/empshop">Shop</a>        <% } %>        
+        <button class="logout-button" onclick="window.location.href='/logout'">Logout</button>
+    </div>    
         <!-- Main Content -->
         <div class="main-content">
             <header>

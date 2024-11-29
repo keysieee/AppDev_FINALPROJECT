@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Tasks</title>
+</head>
+<body>
+    <h1>Manage Tasks</h1>
+    <form action="/admin/tasks/add" method="post">
+        <input type="text" name="employeeId" placeholder="Employee ID" required />
+        <textarea name="description" placeholder="Task Description" required></textarea>
+        <button type="submit">Assign Task</button>
+    </form>
+
+    <h2>All Tasks</h2>
+    <ul>
+        <% tasks.forEach(task => { %>
+            <li><%= task.description %> - Assigned to: <%= task.employeeId %> - Status: <%= task.status %></li>
+        <% }); %>
+    </ul>
+</body>
+</html>

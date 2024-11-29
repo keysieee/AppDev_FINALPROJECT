@@ -165,16 +165,25 @@ app.get('/empshop', (req, res) => {
 });
 
 // Middleware to check if user is an admin
-function isAdmin(req, res, next) {
-    if (req.session.loggedin && req.session.role === 'admin') {
-        return next();
-    }
+function isLoggedIn(req, res, next) {
+    if (req.session.loggedin) return next();
     res.redirect('/login');
 }
 
+function isAdmin(req, res, next) {
+    if (req.session.role === 'admin') return next();
+    res.redirect('/home'); // Redirect employees to their home page
+}
+
+
 // Admin route with admin check
-app.get('/admin', isAdmin, (req, res) => {
-    res.render('admin');
+app.get('/admin', (req, res) => {
+    if (!req.session || !req.session.role) {
+        return res.redirect('/login'); // Redirect if the session or role doesn't exist
+    }
+    res.render('admin', {
+        role: req.session.role // Pass the role to the EJS template
+    });
 });
 
 // Login page route
@@ -188,7 +197,6 @@ app.post('/login', async (req, res) => {
     const { employee_id, password } = req.body;
 
     try {
-        // Fetch user by ID
         const [rows] = await db.query('SELECT * FROM employee WHERE employee_id = ?', [employee_id]);
 
         if (rows.length > 0) {
@@ -198,23 +206,19 @@ app.post('/login', async (req, res) => {
             if (match) {
                 req.session.loggedin = true;
                 req.session.employee = employee;
-                req.session.role = employee.role; // Set the role from the database
+                req.session.role = employee.role;
 
                 // Redirect based on role
                 if (employee.role === 'admin') {
-                    return res.redirect('/admin'); // Redirect to admin dashboard
-                } else if (employee.role === 'employee') {
-                    return res.redirect('/home'); // Redirect to employee home page
+                    return res.redirect('/admin');
                 }
-            } else {
-                return res.status(400).send('Incorrect password!');
+                return res.redirect('/home');
             }
-        } else {
-            return res.status(404).send('Employee not found!');
         }
+        res.status(400).send('Incorrect login credentials');
     } catch (error) {
         console.error('Error during login:', error);
-        res.status(500).send('An error occurred. Please try again.');
+        res.status(500).send('Server error');
     }
 });
 

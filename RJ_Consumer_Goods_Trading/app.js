@@ -7,6 +7,9 @@ const servicesRoutes = require('./routes/services');
 const tasksRoutes = require('./routes/tasks');
 const inoutRoutes = require('./routes/inout');
 const inventoryRoutes = require('./routes/inventory');
+const adminRoutes = require('./routes/admin');
+
+
 
 const app = express();
 
@@ -17,6 +20,17 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: false }
 }));
+
+
+// Middleware for static files and form data parsing
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
+
+// Set EJS as the view engine
+app.set('view engine', 'ejs');
+
+app.use('/admin', adminRoutes);
 
 app.use('/inout', inoutRoutes);
 
@@ -32,14 +46,6 @@ app.put('/inout/update/:id', (req, res) => {
     res.send(`Updated In/Out status for ID: ${id}`);
 });
 
-// Middleware for static files and form data parsing
-app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride('_method'));
-
-// Set EJS as the view engine
-app.set('view engine', 'ejs');
 
 // Routes for /tasks
 app.use('/tasks', tasksRoutes);
@@ -162,6 +168,14 @@ app.get('/empshop', (req, res) => {
         return res.redirect('/login');
     }
     res.render('empshop');
+});
+
+
+app.get('/inventory', (req, res) => {
+    if (!req.session.employee) {
+        return res.redirect('/login');
+    }
+    res.render('inventory');
 });
 
 // Middleware to check if user is an admin
@@ -287,7 +301,7 @@ app.post('/services/add/return', async (req, res) => {
 
 // Add a discount (calculate price after discount)
 app.post('/services/add/discount', async (req, res) => {
-    const { customer_name, item, discount, price } = req.body;
+    const { customer_name, item, price, discount } = req.body;
 
     // Validate the inputs to ensure they are correct and numbers
     if (isNaN(discount) || isNaN(price) || discount < 0 || discount > 100 || price < 0) {
@@ -298,14 +312,15 @@ app.post('/services/add/discount', async (req, res) => {
     const price_after_discount = price - (price * (discount / 100));
 
     try {
-        await db.query('INSERT INTO discount_promotions (customer_name, item, discount, price_after_discount) VALUES (?, ?, ?, ?)', 
-            [customer_name, item, discount, price_after_discount]);
+        await db.query('INSERT INTO discount_promotions (customer_name, item, price, discount, price_after_discount) VALUES (?, ?, ?, ?, ?)', 
+            [customer_name, item, price, discount, price_after_discount]);
         res.redirect('/services'); // After insertion, redirect back to /services
     } catch (err) {
         console.error("Error adding discount:", err);
         res.status(500).send("Server error");
     }
 });
+
 
 // Error handling for undefined routes
 app.use((req, res) => {

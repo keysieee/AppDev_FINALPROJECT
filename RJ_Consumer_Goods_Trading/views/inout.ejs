@@ -407,15 +407,15 @@
                                 <td><%= record.date || 'No Date' %></td>
                                 <td>
                                     <button
-                                        class="update-btn"
-                                        data-id="<%= record.id %>"
-                                        data-branch="<%= record.branch %>"
-                                        data-location="<%= record.location %>"
-                                        data-time_in="<%= record.time_in %>"
-                                        data-time_out="<%= record.time_out %>"
-                                        data-date="<%= record.date %>">
-                                        Update
-                                    </button>
+                                    class="update-btn"
+                                    data-id="<%= record.id %>"
+                                    data-branch="<%= record.branch %>"
+                                    data-location="<%= record.location %>"
+                                    data-time_in="<%= record.time_in %>"
+                                    data-time_out="<%= record.time_out %>"
+                                    data-date="<%= record.date %>">
+                                    Update
+                                </button>                                
                                 </td>
                             </tr>
                         <% }) %>
@@ -445,13 +445,23 @@
                 timeOutField.value = `${timeOutHours}:${timeOutMinutes < 10 ? '0' + timeOutMinutes : timeOutMinutes}`;
             };
             document.addEventListener('DOMContentLoaded', () => {
-                const createModal = document.getElementById('attendanceModal');
-                const updateModal = document.getElementById('updateModal');
-                const closeModalBtns = document.querySelectorAll('.close');
-                const createRecordBtn = document.getElementById('createRecordBtn');
                 const updateButtons = document.querySelectorAll('.update-btn');
-                const updateForm = document.getElementById('attendanceForm');
-
+            
+                updateButtons.forEach(button => {
+                    button.addEventListener('click', function () {
+                        const record = {
+                            id: this.dataset.id,
+                            branch: this.dataset.branch,
+                            location: this.dataset.location,
+                            time_in: this.dataset.time_in,
+                            time_out: this.dataset.time_out,
+                            date: this.dataset.date
+                        };
+            
+                        openUpdateModal(record); // Pass the data to openUpdateModal function
+                    });
+                });
+            });            
                 // Open the create modal
                 createRecordBtn.addEventListener('click', () => {
                     const now = new Date();
@@ -466,17 +476,18 @@
 
                 // Open the update modal and set form values
                 function openUpdateModal(record) {
-                    updateModal.style.display = 'block';
-
-                    // Set form values
+                    const updateModal = document.getElementById('updateModal');
+                
+                    // Set values
                     document.getElementById('record_id').value = record.id;
-                    document.getElementById('employee_id').value = record.employee_id;
                     document.getElementById('branch').value = record.branch;
                     document.getElementById('location').value = record.location;
                     document.getElementById('time_in').value = record.time_in;
-                    document.getElementById('time_out').value = record.time_out || '';  // Pre-fill time_out value
+                    document.getElementById('time_out').value = record.time_out || '';
                     document.getElementById('date').value = record.date;
-                }
+                
+                    updateModal.style.display = 'block';
+                }                
 
                 // Handle update button click to open modal
                 updateButtons.forEach(button => {
@@ -537,7 +548,6 @@
                         console.error("Error updating attendance:", error);
                     });
                 };
-            });
     </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-const employeeModel = require('../models/employeeInfoModel');
+const employeeModel = require('../models/employeeInfo');
 
 const getEmployeeInfoPage = async (req, res) => {
     if (!req.session.employee) {

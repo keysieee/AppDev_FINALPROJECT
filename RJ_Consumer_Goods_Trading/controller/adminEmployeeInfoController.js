@@ -1,4 +1,4 @@
-const employeeModel = require('../models/adminEmployeeInfoModel');
+const employeeModel = require('../models/adminEmployeeInfo');
 
 // Get all employee info for admin
 const getAllEmployeeInfoPage = async (req, res) => {

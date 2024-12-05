@@ -205,6 +205,7 @@
                 ADMIN
             </div>
             <br>
+            <a href="/admin/employee_info" class="menu-item">Employee Information</a>
             <a href="/admin/dashboard" class="menu-item">Dashboard</a>
             <a href="/admin/tasks" class="menu-item active">Tasks</a>
             <a href="/admin/inout" class="menu-item">In/Out</a>
@@ -214,13 +215,52 @@
             <button class="logout-button" onclick="window.location.href='/logout'">Logout</button>
         </div>
             <section class="content">
-                <h2>Tasks</h2>
+                <h2>Assign Tasks</h2>
+
+                <form action="/tasks/add" method="POST">
+                  <label for="description">Task Description:</label>
+                  <input type="text" name="description" required>
+                  
+                  <label for="employee_id">Assign to Employee:</label>
+                  <select name="employee_id" required>
+                    <% employee.forEach(employee => { %>
+                      <option value="<%= employee.id %>"><%= employee.name %></option>
+                    <% }) %>
+                  </select>
+                
+                  <button type="submit">Assign Task</button>
+                </form>
+                
+                <h3>Task List</h3>
                 <table>
+                  <thead>
                     <tr>
-                        <th>Branch</th>
-                        <th>Location</th>
+                      <th>Task Description</th>
+                      <th>Assigned To</th>
+                      <th>Deadline</th>
+                      <th>Status</th>
+                      <th>Actions</th>
                     </tr>
-                </table>
+                  </thead>
+                  <tbody>
+                    <% tasks.forEach(task => { %>
+                      <tr>
+                        <td><%= task.description %></td>
+                        <td><%= task.name %></td>
+                        <td><%= task.deadline %></td>
+                        <td><%= task.completed ? 'Completed' : 'Pending' %></td>
+                        <td>
+                          <form action="/tasks/toggle/<%= task.id %>" method="POST">
+                            <button type="submit"><%= task.completed ? 'Mark Incomplete' : 'Mark Complete' %></button>
+                          </form>
+                          <form action="/tasks/delete/<%= task.id %>" method="POST">
+                            <button type="submit">Delete</button>
+                          </form>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>                
             </section>
         </main>
     </div>

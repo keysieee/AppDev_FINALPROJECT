@@ -237,6 +237,7 @@
             EMPLOYEE
         </div>
         <br>
+        <a href="/employee-info" class="menu-item">Employee Information</a>
         <a href="/tasks" class="menu-item active">Tasks</a>
         <a href="/inout" class="menu-item">In/Out</a>
         <a href="/services" class="menu-item">Services</a>
@@ -246,34 +247,25 @@
     </div>
             </header>
             <div class="task-container">
-                <h1>Task List</h1>
-  
-                <!-- Task table for the employee -->
+                <h2>Your Assigned Tasks</h2>
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Task Description</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% tasks.forEach(task => { %>
-                            <tr>
-                                <td><%= task.description %></td>
-                                <td>
-                                    <% if (task.completed) { %>
-                                        <span>Completed</span>
-                                    <% } else { %>
-                                        <!-- Task completion checkbox -->
-                                        <form action="/tasks/complete/<%= task.id %>" method="POST" style="display: inline;">
-                                            <input type="checkbox" onclick="this.form.submit()" <%= task.completed ? 'checked' : '' %> disabled>
-                                        </form>
-                                    <% } %>
-                                </td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
+                  <thead>
+                    <tr>
+                      <th>Task Description</th>
+                      <th>Deadline</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% tasks.forEach(task => { %>
+                      <tr>
+                        <td><%= task.description %></td>
+                        <td><%= task.deadline %></td>
+                        <td><%= task.completed ? 'Completed' : 'Pending' %></td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>                
             </div>
         </main>
     </div>

@@ -8,8 +8,8 @@ const tasksRoutes = require('./routes/tasks');
 const inoutRoutes = require('./routes/inout');
 const inventoryRoutes = require('./routes/inventory');
 const adminRoutes = require('./routes/admin');
-
-
+const employeeRoutes = require('./routes/employeeInfoRoutes.js');
+const employeeController = require('./controller/employeeInfoController');
 
 const app = express();
 
@@ -31,6 +31,8 @@ app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
 app.use('/admin', adminRoutes);
+
+app.use('/', employeeRoutes);
 
 app.use('/inout', inoutRoutes);
 
@@ -219,7 +221,7 @@ app.post('/login', async (req, res) => {
 
             if (match) {
                 req.session.loggedin = true;
-                req.session.employee = employee;
+                req.session.employee = employee; // Store the employee object in session
                 req.session.role = employee.role;
 
                 // Redirect based on role
@@ -243,17 +245,33 @@ app.get('/signup', (req, res) => {
 
 // Signup form submission handling
 app.post('/signup', async (req, res) => {
-    const { employee_id, name, password, confirm_password } = req.body;
+    const { employee_id, first_name, last_name, email, phone_number, address, gender, password, confirm_password } = req.body;
 
+    // Check if passwords match
     if (password !== confirm_password) {
-        return res.redirect('/signup');
+        return res.render('signup', { error: 'Passwords do not match' });
     }
 
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-    await db.query('INSERT INTO employee (employee_id, name, password) VALUES (?, ?, ?)', [employee_id, name, hashedPassword]);
 
-    res.redirect('/login');
+    try {
+        // Insert into employee table
+        await db.query('INSERT INTO employee (employee_id, first_name, password) VALUES (?, ?, ?)', [employee_id, first_name, hashedPassword]);
+
+        // Insert into employee_info table
+        await db.query('INSERT INTO employee_info (employee_id, first_name, last_name, email, phone_number, address, gender, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
+            [employee_id, first_name, last_name, email, phone_number, address, gender, hashedPassword]);
+
+        // Redirect to login page after successful signup
+        res.redirect('/login');
+    } catch (err) {
+        console.error('Error during signup:', err);
+        res.status(500).render('signup', { error: 'An error occurred during signup. Please try again.' });
+    }
 });
+
+app.get('/employee-info', employeeController.getEmployeeInfoPage);
 
 // Logout route
 app.get('/logout', (req, res) => {
@@ -332,3 +350,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+module.exports = app;

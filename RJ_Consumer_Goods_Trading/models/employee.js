@@ -1,26 +1,14 @@
-// models/user.js
-const db = require('../config/db');
-const bcrypt = require('bcryptjs');
+const db = require('../db'); // Assuming you have a database connection
 
-class User {
-    static createUser(employee_id, name, password) {
-        return new Promise((resolve, reject) => {
-            const hashedPassword = bcrypt.hashSync(password, 10);
-            db.query('INSERT INTO users (employee_id, name, password) VALUES (?, ?, ?)', [employee_id, name, hashedPassword], (err) => {
-                if (err) return reject(err);
-                resolve();
-            });
-        });
-    }
+// Function to create employee in the employee table
+exports.createEmployee = (employee_id, password, role) => {
+    return db.query(
+        'INSERT INTO employee (employee_id, password, role) VALUES (?, ?, ?)', 
+        [employee_id, password, role]
+    );
+};
 
-    static findUserById(employee_id) {
-        return new Promise((resolve, reject) => {
-            db.query('SELECT * FROM users WHERE employee_id = ?', [employee_id], (err, results) => {
-                if (err) return reject(err);
-                resolve(results);
-            });
-        });
-    }
-}
-
-module.exports = User;
+// Function to find employee by employee_id
+exports.findEmployeeByEmployeeId = (employee_id) => {
+    return db.query('SELECT * FROM employee WHERE employee_id = ?', [employee_id]);
+};

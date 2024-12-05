@@ -6,5 +6,4 @@ const ensureAuthenticated = (req, res, next) => {
     }
 };
 
-
 module.exports = ensureAuthenticated;

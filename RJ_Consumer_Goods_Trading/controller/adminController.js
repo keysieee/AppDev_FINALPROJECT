@@ -1,8 +1,3 @@
-exports.getAdminPage = (req, res) => {
-    res.render('admin', {
-        role: req.session.role, // Pass the role to the EJS template
-    });
-};
 exports.dashboard = (req, res) => {
     res.render('admin/dashboard', { title: 'Dashboard' });
 };

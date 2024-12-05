@@ -298,7 +298,7 @@
             <a href="/home" class="icon">🏠</a>
             <span class="icon">👤</span>
             <div class="search">
-                <input type="text" placeholder="Search tasks...">
+                <input type="text" placeholder="Search here...">
             </div>
         </div>
     </header>
@@ -310,6 +310,7 @@
                 EMPLOYEE
             </div>
             <br>
+            <a href="/employee-info" class="menu-item">Employee Information</a>
             <a href="/tasks" class="menu-item">Tasks</a>
             <a href="/inout" class="menu-item active">In/Out</a>
             <a href="/services" class="menu-item">Services</a>
@@ -318,17 +319,15 @@
             <button class="logout-button" onclick="window.location.href='/logout'">Logout</button>
         </div>
         <main>
-            <header class="header">
-                <div class="icons">
-                    <a href="/home" class="icon">🏠</a>
-                    <span class="icon">👤</span>
-                </div>
-            </header>
 
             <!-- Button to trigger modal -->
             <!-- Button to trigger modal -->
             <button class="create-btn" id="createRecordBtn">Create Record</button>
 
+            <br>
+            <br>
+            <br>
+            
             <!-- Modal for Add Attendance -->
             <div id="attendanceModal" class="modal">
                 <div class="modal-content">
@@ -425,129 +424,102 @@
         </main>
     </div>
     <script>
-        document.getElementById('createRecordBtn').addEventListener('click', () => {
-            const now = new Date();
-            const formattedDate = now.toISOString().split('T')[0];
-            const formattedTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-
-            document.getElementById('date').value = formattedDate;
-            document.getElementById('time_in').value = formattedTime;
-
-            // Show the modal
-            document.getElementById('attendanceModal').style.display = 'block';
-        });
-
-            // If updating, set the current time for 'Time Out'
-            if (!timeOutField.value) {
-                const timeOutNow = new Date();
-                const timeOutHours = timeOutNow.getHours();
-                const timeOutMinutes = timeOutNow.getMinutes();
-                timeOutField.value = `${timeOutHours}:${timeOutMinutes < 10 ? '0' + timeOutMinutes : timeOutMinutes}`;
-            };
-            document.addEventListener('DOMContentLoaded', () => {
-                const updateButtons = document.querySelectorAll('.update-btn');
-            
-                updateButtons.forEach(button => {
-                    button.addEventListener('click', function () {
-                        const record = {
-                            id: this.dataset.id,
-                            branch: this.dataset.branch,
-                            location: this.dataset.location,
-                            time_in: this.dataset.time_in,
-                            time_out: this.dataset.time_out,
-                            date: this.dataset.date
-                        };
-            
-                        openUpdateModal(record); // Pass the data to openUpdateModal function
-                    });
+        document.addEventListener('DOMContentLoaded', () => {
+            // Handle the "Create Record" button click
+            document.getElementById('createRecordBtn').addEventListener('click', () => {
+                const now = new Date();
+                const formattedDate = now.toISOString().split('T')[0];
+                const formattedTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+        
+                document.getElementById('date').value = formattedDate;
+                document.getElementById('time_in').value = formattedTime;
+        
+                // Show the create modal
+                document.getElementById('attendanceModal').style.display = 'block';
+            });
+        
+            // Show the update modal and populate it with the record's data
+            const updateButtons = document.querySelectorAll('.update-btn');
+            updateButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const record = {
+                        id: this.dataset.id,
+                        branch: this.dataset.branch,
+                        location: this.dataset.location,
+                        time_in: this.dataset.time_in,
+                        time_out: this.dataset.time_out || '', // Default empty if no time_out exists
+                        date: this.dataset.date
+                    };
+        
+                    openUpdateModal(record); // Pass the data to openUpdateModal function
                 });
-            });            
-                // Open the create modal
-                createRecordBtn.addEventListener('click', () => {
-                    const now = new Date();
-                    const formattedDate = now.toISOString().split('T')[0];
-                    const formattedTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-
-                    document.getElementById('date').value = formattedDate;
-                    document.getElementById('time_in').value = formattedTime;
-
-                    createModal.style.display = 'block';
-                });
-
-                // Open the update modal and set form values
-                function openUpdateModal(record) {
-                    const updateModal = document.getElementById('updateModal');
+            });
+        
+            // Open the update modal and set form values
+            function openUpdateModal(record) {
+                const updateModal = document.getElementById('updateModal');
                 
-                    // Set values
-                    document.getElementById('record_id').value = record.id;
-                    document.getElementById('branch').value = record.branch;
-                    document.getElementById('location').value = record.location;
-                    document.getElementById('time_in').value = record.time_in;
-                    document.getElementById('time_out').value = record.time_out || '';
-                    document.getElementById('date').value = record.date;
-                
-                    updateModal.style.display = 'block';
-                }                
-
-                // Handle update button click to open modal
-                updateButtons.forEach(button => {
-                    button.addEventListener('click', function () {
-                        const record = {
-                            id: this.dataset.id,
-                            employee_id: this.dataset.employee_id,
-                            branch: this.dataset.branch,
-                            location: this.dataset.location,
-                            time_in: this.dataset.time_in,
-                            time_out: this.dataset.time_out,
-                            date: this.dataset.date
-                        };
-
-                        openUpdateModal(record);
-                    });
-                });
-
-                // Handle close button clicks
-                closeModalBtns.forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        updateModal.style.display = 'none';
-                        createModal.style.display = 'none';
-                    });
-                });
-
-                // Handle form submit (for update attendance)
-                updateForm.onsubmit = (event) => {
-                    event.preventDefault(); // Prevent form submission to handle via AJAX if needed
-
-                    // Get the current time for the 'time_out' field if empty
-                    const timeOutField = document.getElementById('time_out');
-                    if (!timeOutField.value) {
-                        const timeOutNow = new Date();
-                        const timeOutHours = timeOutNow.getHours();
-                        const timeOutMinutes = timeOutNow.getMinutes();
-                        timeOutField.value = `${timeOutHours}:${timeOutMinutes < 10 ? '0' + timeOutMinutes : timeOutMinutes}`;
+                // Set values in the update modal
+                document.getElementById('record_id').value = record.id;
+                document.getElementById('branch').value = record.branch;
+                document.getElementById('location').value = record.location;
+                document.getElementById('time_in').value = record.time_in;
+                document.getElementById('time_out').value = record.time_out;
+                document.getElementById('date').value = record.date;
+        
+                updateModal.style.display = 'block';
+            }
+        
+            // Handle the form submit (for update attendance)
+            const updateForm = document.getElementById('updateForm');
+            updateForm.onsubmit = (event) => {
+                event.preventDefault(); // Prevent form submission to handle via AJAX if needed
+        
+                const timeOutField = document.getElementById('time_out');
+                if (!timeOutField.value) {
+                    const timeOutNow = new Date();
+                    const timeOutHours = timeOutNow.getHours();
+                    const timeOutMinutes = timeOutNow.getMinutes();
+                    timeOutField.value = `${timeOutHours}:${timeOutMinutes < 10 ? '0' + timeOutMinutes : timeOutMinutes}`;
+                }
+        
+                // Update the attendance record via AJAX
+                const formData = new FormData(updateForm);
+                fetch('/update-attendance', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Attendance updated successfully!");
+                        updateModal.style.display = 'none'; // Close the modal on success
+                        location.reload(); // For page reload or update table
+                    } else {
+                        alert("Failed to update attendance. Please try again.");
                     }
-
-                    // Update the attendance record via AJAX (you can replace this part with actual AJAX logic)
-                    const formData = new FormData(updateForm);
-                    fetch('/update-attendance', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert("Attendance updated successfully!");
-                            updateModal.style.display = 'none'; // Close the modal on success
-                            // Optionally, reload the page or update the table
-                            location.reload(); // For page reload
-                        } else {
-                            alert("Failed to update attendance. Please try again.");
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error updating attendance:", error);
-                    });
-                };
+                })
+                .catch(error => {
+                    console.error("Error updating attendance:", error);
+                });
+            };
+        
+            // Close modal logic
+            const closeModalBtns = document.querySelectorAll('.close-modal-btn');
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.getElementById('updateModal').style.display = 'none';
+                    document.getElementById('attendanceModal').style.display = 'none';
+                });
+            });
+        
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === document.getElementById('updateModal')) {
+                    document.getElementById('updateModal').style.display = 'none';
+                }
+            });
+        });        
     </script>
 </body>
 </html>

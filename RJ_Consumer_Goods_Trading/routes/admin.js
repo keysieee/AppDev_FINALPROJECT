@@ -12,4 +12,12 @@ router.get('/shop', adminController.shop);
 // New route for employee-info
 router.get('/employee-info', adminController.employeeInfo);
 
+// Get total employees
+router.get('/total-employees', adminController.getTotalEmployees);
+
+// Test route
+router.get('/test', (req, res) => {
+    res.json({ message: 'Test route is working' });
+});
+
 module.exports = router;

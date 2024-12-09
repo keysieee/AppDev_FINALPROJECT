@@ -48,6 +48,14 @@ app.put('/inout/update/:id', (req, res) => {
     res.send(`Updated In/Out status for ID: ${id}`);
 });
 
+db.getConnection()
+    .then(() => {
+        console.log('Database connection successful');
+    })
+    .catch((error) => {
+        console.error('Database connection failed:', error);
+    });
+
 
 // Routes for /tasks
 app.use('/tasks', tasksRoutes);

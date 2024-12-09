@@ -1,3 +1,5 @@
+const db = require('../config/db');
+
 exports.dashboard = (req, res) => {
     res.render('admin/dashboard', { title: 'Dashboard' });
 };
@@ -25,4 +27,17 @@ exports.shop = (req, res) => {
 
 exports.employeeInfo = (req, res) => {
     res.render('admin/employeeInfo', { title: 'Employee Information' });
+};
+
+exports.getTotalEmployees = async (req, res) => {
+    try {
+        console.log('Fetching total employees from the database...');
+        const [rows] = await db.query('SELECT COUNT(*) as totalEmployees FROM employee');
+        console.log('Query result:', rows);
+        const totalEmployees = rows[0].totalEmployees;
+        res.json({ totalEmployees });
+    } catch (error) {
+        console.error('Error fetching total employees:', error);
+        res.status(500).json({ error: 'Failed to fetch total employees' });
+    }
 };

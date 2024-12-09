@@ -241,6 +241,18 @@ CREATE TABLE `tasks` (
 INSERT INTO `tasks` (`id`, `employee_id`, `task_description`, `task_date`) VALUES
 ('', NULL, 'hshs', '0000-00-00');
 
+
+CREATE TABLE branches (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    branch_name VARCHAR(255) NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    manager_name VARCHAR(255) NOT NULL,
+    contact_number VARCHAR(15) NOT NULL,
+    year_established INT NOT NULL,
+    branch_photo BLOB
+);
+
+
 --
 -- Indexes for dumped tables
 --

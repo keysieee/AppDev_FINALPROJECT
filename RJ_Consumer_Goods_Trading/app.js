@@ -10,6 +10,7 @@ const inventoryRoutes = require('./routes/inventory');
 const adminRoutes = require('./routes/admin');
 const employeeRoutes = require('./routes/employeeInfoRoutes');
 const employeeController = require('./controller/employeeInfoController');
+const shopRoutes = require('./routes/admin/shop');
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/admin', adminRoutes);
 app.use('/', employeeRoutes);
+
 app.use('/inout', inoutRoutes);
 
 app.set('view engine', 'ejs');

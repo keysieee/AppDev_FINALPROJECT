@@ -9,8 +9,8 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            height: 100vh; /* Full viewport height */
-            overflow: hidden; /* Prevent scrolling */
+            height: 100vh;
+            overflow: hidden;
             color: black;
             background: url('/images/background.png') no-repeat center center fixed;
             background-size: cover;
@@ -19,7 +19,7 @@
         }
         .header {
             max-width: 100%;
-            background-color: transparent; /* New header color */
+            background-color: transparent;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -32,8 +32,8 @@
             align-items: center;
         }
         .header .left-icons img {
-            height: 60px; /* Adjust logo height */
-            margin-right: 10px; /* Space between logo and text */
+            height: 60px;
+            margin-right: 10px;
         }
         .header .left-icons .store-name {
             font-size: 24px;
@@ -58,18 +58,18 @@
         }
         .container {
             display: flex;
-            flex: 1; /* Allow container to take up remaining space */
+            flex: 1;
             width: 100%;
         }
         .sidebar {
-            width: 15%; /* Sidebar width */
-            background-color: #3e3e3e; /* Dark gray background for sidebar */
+            width: 15%;
+            background-color: #3e3e3e;
             padding: 20px;
-            color: white; /* Sidebar text color */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow effect */
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             display: flex;
-            flex-direction: column; /* Stack items vertically */
-            align-items: center; /* Center items horizontally */
+            flex-direction: column;
+            align-items: center;
         }
         .sidebar img {
             width: 150px;
@@ -83,49 +83,48 @@
             text-align: center;
         }
         .sidebar a {
-            display: block; /* Block display for links */
+            display: block;
             padding: 10px;
-            color: white; /* Link color in sidebar */
+            color: white;
             text-decoration: none;
             margin-bottom: 10px;
-            border: 1px solid #ccc; /* Border for buttons */
-            border-radius: 5px; /* Rounded corners */
-            transition: background 0.3s; /* Smooth background change */
-            width: 100%; /* Make links full width */
-            text-align: center; /* Center align text */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: background 0.3s;
+            width: 100%;
+            text-align: center;
         }
         .sidebar a:hover,
         .sidebar a.active {
             background-color: #ff4a4a;
         }
         .menu-item {
-        display: block;
-        padding: 10px;
-        margin-bottom: 10px;
-        background-color: #8d4444;
-        text-decoration: none;
-        color: white;
-        text-align: center;
-        border-radius: 5px;
+            display: block;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #8d4444;
+            text-decoration: none;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
         }
-
         .menu-item.active {
-        background-color: #ff4a4a;
+            background-color: #ff4a4a;
         }
         .logout-button {
             margin-top: auto;
             padding: 10px;
-            background-color: darkred; /* Logout button background color */
-            color: white; /* Text color */
-            border: none; /* Remove border */
-            border-radius: 5px; /* Rounded corners */
-            cursor: pointer; /* Pointer cursor on hover */
-            width: 100%; /* Make button full width */
-            text-align: center; /* Center align text */
-            transition: background 0.3s; /* Smooth background change */
+            background-color: darkred;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            transition: background 0.3s;
         }
         .logout-button:hover {
-            background: rgba(255, 0, 0, 0.2); /* Hover background color */
+            background: rgba(255, 0, 0, 0.2);
         }
         .main-content {
             flex-grow: 1;
@@ -134,37 +133,35 @@
             padding: 5px;
         }
         .content {
-            flex-grow: 1; /* Allow content area to grow */
+            flex-grow: 1;
             padding: 10px;
-            color: black; /* Change text color to black for readability on white background */
-            background-color: transparent; /* Change background color to white */
-            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
-            border-radius: 2px; /* Rounded corners */
-            margin-top: 5px; /* Reduced space between header and content */
+            color: black;
+            background-color: transparent;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+            border-radius: 2px;
+            margin-top: 5px;
             display: flex;
-            flex-direction: column; /* Stack items vertically */
-            /* Remove centering properties */
-            justify-content: flex-start; /* Align items to the top */
+            flex-direction: column;
+            justify-content: flex-start;
         }
         footer {
             width: 100%;
-            background: darkgray; /* Dark gray background for footer */
-            padding: 15px; /* Space around footer */
-            color: black; /* Footer text color */
+            background: darkgray;
+            padding: 15px;
+            color: black;
             display: flex;
-            justify-content: flex-start; /* Align items to the left */
-            position: relative; /* Position relative to the content */
+            justify-content: flex-start;
+            position: relative;
         }
         .content img {
-            max-width: 100%; /* Make image responsive */
-            height: auto; /* Maintain aspect ratio */
-            border-radius: 5px; /* Rounded corners for images */
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
         }
-        /* Table styling */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 0; /* Adjust margin to position table at the top */
+            margin-top: 0;
         }
         th, td {
             padding: 15px;
@@ -178,13 +175,75 @@
         td {
             background-color: #ddd;
         }
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+        }
+        .btn {
+            padding: 6px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 2px 0;
+        }
+        .btn.update {
+            background-color: #ff9800;
+        }
+        .btn.delete {
+            background-color: #f44336;
+        }
+        .btn:hover {
+            opacity: 0.8;
+        }
+        /* Modal (Floating) Form styles */
+        .add-form {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Overlay */
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .add-form .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .add-form input, .add-form textarea, .add-form select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .close-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            width: 100%;
+        }
+        #addBranchForm {
+            display: flex;
+}
+
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="left-icons">
-            <img src="/images/logo.png" alt="R&J Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
+            <img src="/images/logo.png" alt="R&J Logo" class="store-logo">
             <div class="store-name">
                 RJ CONSUMER GOODS TRADING
             </div>
@@ -198,14 +257,12 @@
         </div>
     </header>
     <div class="container">
-        <!-- Sidebar -->
         <div class="sidebar">
-            <img src="/images/admin.png" alt="Admin Logo" class="store-logo"> <!-- Replace with the actual path to your logo -->
+            <img src="/images/admin.png" alt="Admin Logo" class="store-logo">
             <div class="store-name">
                 ADMIN
             </div>
             <br>
-            <a href="/admin/employee_info" class="menu-item">Employee Information</a>
             <a href="/admin/dashboard" class="menu-item">Dashboard</a>
             <a href="/admin/tasks" class="menu-item">Tasks</a>
             <a href="/admin/inout" class="menu-item">In/Out</a>
@@ -214,16 +271,141 @@
             <a href="/admin/shop" class="menu-item active">Shop</a>
             <button class="logout-button" onclick="window.location.href='/logout'">Logout</button>
         </div>
+        <main class="main-content">
             <section class="content">
                 <h2>Branches / Shop</h2>
-                <table>
-                    <tr>
-                        <th>Branch</th>
-                        <th>Location</th>
-                    </tr>
+    
+                <!-- Add Branch Button -->
+                <button class="btn" onclick="toggleAddForm()">Add Branch</button>
+    
+                <!-- Add Branch Floating Form (Modal) -->
+                <div id="addBranchForm" class="add-form" style="display:none;">
+                    <div class="form-container">
+                        <h3>Add Branch</h3>
+                        <form id="branchForm" enctype="multipart/form-data">
+                            <label for="branch_name">Branch Name:</label>
+                            <input type="text" id="branch_name" name="branch_name" required>
+    
+                            <label for="location">Location:</label>
+                            <input type="text" id="location" name="location" required>
+    
+                            <label for="manager_name">Manager Name:</label>
+                            <input type="text" id="manager_name" name="manager_name" required>
+    
+                            <label for="contact_number">Contact Number:</label>
+                            <input type="text" id="contact_number" name="contact_number" required>
+    
+                            <label for="year_established">Year Established:</label>
+                            <select id="year_established" name="year_established" required>
+                                <!-- Loop through years 1900 to 2024 -->
+                                <option value="" disabled selected>Select Year</option>
+                                <script>
+                                    const yearSelect = document.getElementById('year_established');
+                                    for (let year = 1900; year <= 2024; year++) {
+                                        const option = document.createElement('option');
+                                        option.value = year;
+                                        option.textContent = year;
+                                        yearSelect.appendChild(option);
+                                    }
+                                </script>
+                            </select>
+    
+                            <label for="branch_photo">Branch Photo:</label>
+                            <input type="file" id="branch_photo" name="branch_photo" accept="image/*">
+                            
+                            <button type="submit" class="btn">Submit</button>
+                            <button type="button" class="close-btn" onclick="toggleAddForm()">Close</button>
+                        </form>
+                    </div>
+                </div>
+    
+                <!-- Table for Branches -->
+                <table id="branchTable">
+                    <thead>
+                        <tr>
+                            <th>Branch</th>
+                            <th>Location</th>
+                            <th>Manager Name</th>
+                            <th>Contact Number</th>
+                            <th>Year Established</th>
+                            <th>Branch Photo</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Placeholder row -->
+                        <tr>
+                            <td colspan="7">No branches available</td>
+                        </tr>
+                    </tbody>
                 </table>
             </section>
         </main>
     </div>
+    
+    <script>
+        // Toggle Add Branch Form visibility
+        function toggleAddForm() {
+            const form = document.getElementById('addBranchForm');
+            form.style.display = form.style.display === 'flex' ? 'none' : 'flex';
+        }
+    
+        // Handle form submission and add branch row
+        document.getElementById('branchForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevents the default form submission
+    
+            const formData = new FormData(this); // Collect form data, including the file
+    
+            // Check if form data is being collected properly (log form data for debugging)
+            for (let [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+    
+            fetch('/admin/add-branch', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                return response.json(); // Parse JSON response from server
+            })
+            .then(data => {
+                console.log('Server Response:', data); // Log response
+                if (data.success) {  // Make sure server responds with a success flag
+                    addBranchRow(data.branch_name, location, data.manager_name, data.contact_number, data.year_established);
+                    this.reset(); // Reset form fields
+                    toggleAddForm(); // Close form
+                } else {
+                    console.error('Error adding branch:', data.error); // Log the error in the console
+                    alert('Failed to add branch: ' + data.error); // Show an alert with error
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error); // Log any network or other errors
+                alert('An error occurred while adding the branch. Please try again later.');
+            });
+        });
+    
+        // Function to add the new branch to the table dynamically
+        function addBranchRow(branch_name, location, manager_name, contact_number, year_established) {
+            const table = document.getElementById('branchTable').getElementsByTagName('tbody')[0];
+    
+            // Remove placeholder row if it exists
+            if (table.children.length === 1 && table.children[0].textContent === 'No branches available') {
+                table.removeChild(table.children[0]);
+            }
+    
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${branch_name}</td>
+                <td>${manager_name}</td>
+                <td class="action-buttons">
+                    <button class="btn">Add Detail</button>
+                    <button class="btn update">Update</button>
+                    <button class="btn delete">Delete</button>
+                </td>
+            `;
+            table.appendChild(row);
+        }
+    </script>
 </body>
 </html>

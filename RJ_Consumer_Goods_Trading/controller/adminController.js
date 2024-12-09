@@ -21,3 +21,8 @@ exports.inventory = (req, res) => {
 exports.shop = (req, res) => {
     res.render('admin/shop', { title: 'Shop' });
 };
+
+
+exports.employeeInfo = (req, res) => {
+    res.render('admin/employeeInfo', { title: 'Employee Information' });
+};

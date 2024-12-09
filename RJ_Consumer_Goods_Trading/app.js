@@ -8,7 +8,7 @@ const tasksRoutes = require('./routes/tasks');
 const inoutRoutes = require('./routes/inout');
 const inventoryRoutes = require('./routes/inventory');
 const adminRoutes = require('./routes/admin');
-const employeeRoutes = require('./routes/employeeInfoRoutes.js');
+const employeeRoutes = require('./routes/employeeInfoRoutes');
 const employeeController = require('./controller/employeeInfoController');
 
 const app = express();
@@ -27,14 +27,12 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.urlencoded({ extended: true }));
 
-// Set EJS as the view engine
-app.set('view engine', 'ejs');
-
 app.use('/admin', adminRoutes);
-
 app.use('/', employeeRoutes);
-
 app.use('/inout', inoutRoutes);
+
+app.set('view engine', 'ejs');
+app.set('views', './views');
 
 const methodOverride = require('method-override');
 app.use(methodOverride('_method'));
@@ -191,6 +189,16 @@ function isAdmin(req, res, next) {
     res.redirect('/home'); // Redirect employees to their home page
 }
 
+function ensureAdmin(req, res, next) {
+    console.log('Checking if user is admin');
+    if (req.session.role === 'admin') {
+        return next();
+    }
+    res.redirect('/login');
+}
+
+app.get('/admin/employees', ensureAdmin, employeeController.getAllEmployeesPage);
+
 
 // Admin route with admin check
 app.get('/admin', (req, res) => {
@@ -270,6 +278,11 @@ app.post('/signup', async (req, res) => {
         res.status(500).render('signup', { error: 'An error occurred during signup. Please try again.' });
     }
 });
+
+app.get('/employee-info', (req, res, next) => {
+    console.log('Accessing /employee-info');
+    next();
+}, employeeController.getEmployeeInfoPage);
 
 app.get('/employee-info', employeeController.getEmployeeInfoPage);
 

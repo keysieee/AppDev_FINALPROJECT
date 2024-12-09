@@ -1,60 +1,56 @@
-const db = require('../config/db');
+const db = require('../config/db'); // Assuming db is configured
+const moment = require('moment');
 
-// Fetch all tasks, including the employee name
+// Fetch tasks for admin and employees
 exports.getTasks = async (req, res) => {
   try {
-    // Fetch tasks along with the employee name
-    const [tasks] = await db.query('SELECT tasks.*, employee.name FROM tasks JOIN employee ON tasks.employee_id = employee.id');
-    
-    // Fetch all employees (to display in the dropdown)
-    const [employee] = await db.query('SELECT * FROM employee');
-    
-    // Render the tasks view, passing both tasks and employees
-    res.render('admin/tasks', { tasks, employees: employee });
-  } catch (err) {
-    console.error("Error fetching tasks:", err);
-    res.status(500).send("Server error");
+      const userRole = req.session.role; // Check user role
+      const userId = req.session.userId; // Get the logged-in user's ID
+
+      let tasks = [];
+      if (userRole === 'admin') {
+          // Admin fetches all tasks
+          const [result] = await db.query('SELECT * FROM tasks ORDER BY task_date DESC');
+          tasks = result || []; // Ensure tasks is always an array, even if empty
+      } else if (userRole === 'employee') {
+          // Employee fetches only their own tasks
+          const [result] = await db.query('SELECT * FROM tasks WHERE employee_id = ? ORDER BY task_date DESC', [userId]);
+          tasks = result || []; // Ensure tasks is always an array, even if empty
+      }
+
+      // Render the appropriate view based on the role
+      res.render(userRole === 'admin' ? 'admin/tasks' : 'employee/tasks', { tasks });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
   }
 };
 
-// Add a new task, with employee ID and a 1-week deadline
+// Add a new task (Admin only)
 exports.addTask = async (req, res) => {
-  const { description, employee_id } = req.body;
-  const deadline = new Date();
-  deadline.setDate(deadline.getDate() + 7); // Set deadline to 1 week from today
+    const { employee_id, task_description, task_date } = req.body;
 
-  const sql = 'INSERT INTO tasks (task_description, employee_id, task_date, deadline) VALUES (?, ?, ?, ?)';
-  try {
-    await db.query(sql, [description, employee_id, new Date(), deadline]);
-    res.redirect('/tasks');
-  } catch (err) {
-    console.error("Error adding task:", err);
-    res.status(500).send("Server error");
-  }
+    try {
+        await db.query(
+            'INSERT INTO tasks (employee_id, task_description, task_date) VALUES (?, ?, ?)',
+            [employee_id, task_description, task_date]
+        );
+        res.redirect('/admin/tasks');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
 };
 
-// Update task completion status
-exports.toggleTask = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const [results] = await db.query('SELECT completed FROM tasks WHERE id = ?', [id]);
-    const completed = !results[0].completed;
-    await db.query('UPDATE tasks SET completed = ? WHERE id = ?', [completed, id]);
-    res.redirect('/tasks');
-  } catch (err) {
-    console.error("Error toggling task:", err);
-    res.status(500).send("Server error");
-  }
-};
+// Mark task as done (Employee only)
+exports.markTaskDone = async (req, res) => {
+    const { taskId } = req.body;
 
-// Delete a task
-exports.deleteTask = async (req, res) => {
-  const { id } = req.params;
-  try {
-    await db.query('DELETE FROM tasks WHERE id = ?', [id]);
-    res.redirect('/tasks');
-  } catch (err) {
-    console.error("Error deleting task:", err);
-    res.status(500).send("Server error");
-  }
+    try {
+        await db.query('UPDATE tasks SET is_done = ? WHERE id = ?', [true, taskId]);
+        res.redirect('/employee/tasks');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
 };

@@ -9,4 +9,7 @@ router.get('/services', adminController.services);
 router.get('/inventory', adminController.inventory);
 router.get('/shop', adminController.shop);
 
+// New route for employee-info
+router.get('/employee-info', adminController.employeeInfo);
+
 module.exports = router;

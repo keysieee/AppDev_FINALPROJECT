@@ -7,4 +7,5 @@ const db= mysql.createPool({
     database: 'rj_cgt' // Your database name
 });
 
+
 module.exports = db;

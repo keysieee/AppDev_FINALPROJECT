@@ -3,66 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Employee Information</title>
+    <title>All Employees</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            overflow: hidden;
         }
-        table, th, td {
+        th, td {
             border: 1px solid #ddd;
+            padding: 8px;
         }
         th {
-            background-color: #007bff;
-            color: white;
-            padding: 10px;
-            text-align: center;
-        }
-        td {
-            padding: 10px;
+            background-color: #f2f2f2;
             text-align: left;
-        }
-        .edit-btn {
-            display: inline-block;
-            text-align: center;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .edit-btn:hover {
-            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>All Employee Information</h1>
+    <h1>All Employees</h1>
+
+    <% if (message) { %>  
+        <p><%= message %></p>
+    <% } %>  
+
+    <% if (employees && employees.length > 0) { %>  
         <table>
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Employee ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
@@ -70,12 +38,12 @@
                     <th>Phone Number</th>
                     <th>Address</th>
                     <th>Gender</th>
-                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <% employees.forEach(employee => { %>
                     <tr>
+                        <td><%= employee.id %></td>
                         <td><%= employee.employee_id %></td>
                         <td><%= employee.first_name %></td>
                         <td><%= employee.last_name %></td>
@@ -83,13 +51,12 @@
                         <td><%= employee.phone_number %></td>
                         <td><%= employee.address %></td>
                         <td><%= employee.gender %></td>
-                        <td>
-                            <a href="/employee-info/edit/<%= employee.employee_id %>" class="edit-btn">Edit</a>
-                        </td>
                     </tr>
-                <% }) %>
+                <% }); %>
             </tbody>
         </table>
-    </div>
+    <% } else { %>
+        <p>No employees found.</p>
+    <% } %>
 </body>
 </html>

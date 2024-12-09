@@ -63,8 +63,26 @@ const updateEmployeeInfo = async (req, res) => {
     }
 };
 
+// Get all employees (admin access)
+const getAllEmployeesPage = async (req, res) => {
+    console.log('Fetching all employees...');
+    if (!req.session.admin) {
+        return res.redirect('/login');
+    }
+
+    try {
+        const employees = await employeeModel.getAllEmployees();
+        const message = req.query.message || null; // Get message from query params or default to null
+        res.render('admin/employeeInfo', { employees, message });
+    } catch (err) {
+        console.error('Error retrieving employees:', err);
+        res.status(500).render('error', { message: 'An error occurred while fetching employees.' });
+    }
+};
+
 module.exports = {
     getEmployeeInfoPage,
     getEditEmployeeInfoPage,
     updateEmployeeInfo,
+    getAllEmployeesPage, // Export the new function
 };

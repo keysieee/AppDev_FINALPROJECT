@@ -24,10 +24,10 @@ exports.shop = (req, res) => {
     res.render('admin/shop', { title: 'Shop' });
 };
 
-
 exports.employeeInfo = (req, res) => {
     res.render('admin/employeeInfo', { title: 'Employee Information' });
 };
+
 
 exports.getTotalEmployees = async (req, res) => {
     try {
@@ -39,5 +39,18 @@ exports.getTotalEmployees = async (req, res) => {
     } catch (error) {
         console.error('Error fetching total employees:', error);
         res.status(500).json({ error: 'Failed to fetch total employees' });
+    }
+};
+
+exports.shop = async (req, res) => {
+    try {
+        // Fetch branches from the database
+        const [branches] = await db.query('SELECT * FROM branches');
+
+        // Render the view with branches
+        res.render('admin/shop', { branches });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
     }
 };

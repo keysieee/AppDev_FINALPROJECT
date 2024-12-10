@@ -135,7 +135,7 @@
         .content {
             flex-grow: 1;
             padding: 10px;
-            color: black;
+            color: white;
             background-color: transparent;
             box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
             border-radius: 2px;
@@ -173,12 +173,19 @@
             color: white;
         }
         td {
-            background-color: #ddd;
-        }
+            background-color: #ddd; 
+            color: black;           
+        }        
         .action-buttons {
             display: flex;
             flex-direction: column;
         }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: black; 
+        }        
         .btn {
             padding: 6px 10px;
             background-color: #4CAF50;
@@ -211,7 +218,7 @@
         }
         .add-form .form-container {
             background-color: white;
-            padding: 20px;
+            padding: 30px;
             border-radius: 8px;
             max-width: 500px;
             width: 100%;
@@ -283,7 +290,7 @@
                 <div id="addBranchForm" class="add-form" style="display:none;">
                     <div class="form-container">
                         <h3>Add Branch</h3>
-                        <form id="branchForm" enctype="multipart/form-data">
+                        <form id="branchForm" enctype="multipart/form-data" onsubmit="submitForm(event)">
                             <label for="branch_name">Branch Name:</label>
                             <input type="text" id="branch_name" name="branch_name" required>
     
@@ -310,103 +317,124 @@
                                     }
                                 </script>
                             </select>
-    
-                            <label for="branch_photo">Branch Photo:</label>
-                            <input type="file" id="branch_photo" name="branch_photo" accept="image/*">
-                            
-                            <button type="submit" class="btn">Submit</button>
+                             <button type="submit" class="btn">Submit</button>
                             <button type="button" class="close-btn" onclick="toggleAddForm()">Close</button>
                         </form>
                     </div>
                 </div>
-    
-                <!-- Table for Branches -->
                 <table id="branchTable">
                     <thead>
                         <tr>
-                            <th>Branch</th>
+                            <th>Branch Name</th>
                             <th>Location</th>
                             <th>Manager Name</th>
                             <th>Contact Number</th>
                             <th>Year Established</th>
-                            <th>Branch Photo</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Placeholder row -->
-                        <tr>
-                            <td colspan="7">No branches available</td>
-                        </tr>
+                        <% branches.forEach(branch => { %>
+                            <tr>
+                                <td><%= branch.branch_name %></td>
+                                <td><%= branch.location %></td>
+                                <td><%= branch.manager_name %></td>
+                                <td><%= branch.contact_number %></td>
+                                <td><%= branch.year_established %></td>
+                                <td class="action-buttons">
+                                    <button class="btn update" onclick="updateBranch('<%= branch.id %>')">Update</button>
+                                    <button class="btn delete" onclick="deleteBranch('<%= branch.id %>')">Delete</button>
+                                </td>                                                               
+                            </tr>
+                        <% }); %>
                     </tbody>
                 </table>
             </section>
         </main>
     </div>
-    
+
     <script>
-        // Toggle Add Branch Form visibility
-        function toggleAddForm() {
-            const form = document.getElementById('addBranchForm');
-            form.style.display = form.style.display === 'flex' ? 'none' : 'flex';
+        // Update Branch
+        function updateBranch(branch_id) {
+            alert(`Update functionality for branch ID ${branch_id} coming soon!`);
         }
-    
+
+        // Delete Branch
+        function deleteBranch(branch_id) {
+            if (confirm("Are you sure you want to delete this branch?")) {
+                fetch(`/admin/delete-branch/${branch_id}`, {
+                    method: 'DELETE'
+                }).then(response => response.json())
+                  .then(data => {
+                      if (data.success) {
+                          alert('Branch deleted successfully!');
+                          location.reload();
+                      } else {
+                          alert('Error deleting branch.');
+                      }
+                  });
+            }
+        }
+        
+            function toggleAddForm() {
+                const form = document.getElementById('addBranchForm');
+                form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+            }
+            
+            function submitForm(event) {
+                event.preventDefault(); // Prevent form from refreshing the page
+            
+                // Gather form data
+                const formData = new FormData(document.getElementById('branchForm'));
+                const data = {
+                    branch_name: formData.get('branch_name'),
+                    location: formData.get('location'),
+                    manager_name: formData.get('manager_name'),
+                    contact_number: formData.get('contact_number'),
+                    year_established: formData.get('year_established'),
+                };
+            
+                // Send request to the server
+                fetch('/admin/add-branch', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        alert(result.message);
+                        location.reload(); // Reload page to reflect changes
+                    } else {
+                        console.error('Error:', result);
+                        alert('Failed to add branch. Please check your input.');
+                    }
+                })
+                .catch(error => console.error('Fetch Error:', error));
+            }            
+
         // Handle form submission and add branch row
         document.getElementById('branchForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevents the default form submission
     
             const formData = new FormData(this); // Collect form data, including the file
     
-            // Check if form data is being collected properly (log form data for debugging)
-            for (let [key, value] of formData.entries()) {
-                console.log(`${key}: ${value}`);
-            }
-    
             fetch('/admin/add-branch', {
                 method: 'POST',
                 body: formData,
             })
-            .then(response => {
-                return response.json(); // Parse JSON response from server
-            })
+            .then(response => response.json()) // Parse JSON response from server
             .then(data => {
-                console.log('Server Response:', data); // Log response
-                if (data.success) {  // Make sure server responds with a success flag
-                    addBranchRow(data.branch_name, location, data.manager_name, data.contact_number, data.year_established);
-                    this.reset(); // Reset form fields
-                    toggleAddForm(); // Close form
+                if (data.success) {
+                    alert('Branch added successfully!');
+                    location.reload();
                 } else {
-                    console.error('Error adding branch:', data.error); // Log the error in the console
-                    alert('Failed to add branch: ' + data.error); // Show an alert with error
+                    alert('Error adding branch.');
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error); // Log any network or other errors
-                alert('An error occurred while adding the branch. Please try again later.');
             });
         });
-    
-        // Function to add the new branch to the table dynamically
-        function addBranchRow(branch_name, location, manager_name, contact_number, year_established) {
-            const table = document.getElementById('branchTable').getElementsByTagName('tbody')[0];
-    
-            // Remove placeholder row if it exists
-            if (table.children.length === 1 && table.children[0].textContent === 'No branches available') {
-                table.removeChild(table.children[0]);
-            }
-    
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${branch_name}</td>
-                <td>${manager_name}</td>
-                <td class="action-buttons">
-                    <button class="btn">Add Detail</button>
-                    <button class="btn update">Update</button>
-                    <button class="btn delete">Delete</button>
-                </td>
-            `;
-            table.appendChild(row);
-        }
     </script>
 </body>
 </html>

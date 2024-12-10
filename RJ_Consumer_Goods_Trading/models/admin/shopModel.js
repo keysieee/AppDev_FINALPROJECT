@@ -1,23 +1,15 @@
-const mongoose = require('mongoose');
+const connection = require('../config/db');
 
-const shopSchema = new mongoose.Schema({
-  branchName: {
-    type: String,
-    required: true,
-  },
-  location: {
-    type: String,
-    required: true,
-  },
-  contactInfo: {
-    type: String,
-    required: true,
-  },
-  employees: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Employee', // assuming an Employee model exists
-  }],
-});
+const shopModel = {
+    getAllBranches: async () => {
+        const query = 'SELECT * FROM branches';
+        return new Promise((resolve, reject) => {
+            connection.query(query, (err, results) => {
+                if (err) reject(err);
+                resolve(results);
+            });
+        });
+    }
+};
 
-const Shop = mongoose.model('Shop', shopSchema);
-module.exports = Shop;
+module.exports = shopModel;

@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path'); 
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
@@ -27,6 +28,7 @@ app.use(session({
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use('/admin', adminRoutes);
 app.use('/', employeeRoutes);
@@ -34,10 +36,24 @@ app.use('/', employeeRoutes);
 app.use('/inout', inoutRoutes);
 
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
 app.set('views', './views');
+
+app.use('/admin', shopRoutes);
 
 const methodOverride = require('method-override');
 app.use(methodOverride('_method'));
+
+app.use((req, res, next) => {
+    req.db = db;
+    next();
+});
+
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+});
 
 // Route for updating
 app.put('/inout/update/:id', (req, res) => {
@@ -55,7 +71,6 @@ db.getConnection()
     .catch((error) => {
         console.error('Database connection failed:', error);
     });
-
 
 // Routes for /tasks
 app.use('/tasks', tasksRoutes);
@@ -165,6 +180,16 @@ app.post('/update-attendance', async (req, res) => {
         console.error('Error updating attendance:', err);
         res.status(500).send('Server error.');
     }
+});
+
+app.post('/admin/add-branch', (req, res) => {
+    const { branch_name, location, manager_name, contact_number, year_established } = req.body;
+
+    if (!branch_name || !location || !manager_name || !contact_number || !year_established) {
+        return res.json({ success: false, message: 'All fields are required' });
+    }
+
+    // Continue processing and adding the branch to the database
 });
 
 // Admin inventory page route with login and admin check
